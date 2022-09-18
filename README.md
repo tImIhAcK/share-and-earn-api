@@ -4,9 +4,8 @@ UBUY eCommerce backend created with PHP and MySql.
 
 API to use with frontend
 
-[] Completed task
-
-[x] An uncompleted task
+- [ ] Completed task
+- [x] An uncompleted task
 
 File tree
 ```code
