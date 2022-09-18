@@ -1,6 +1,6 @@
 <?php
 
-class CategoryController extends BaseController
+class ProductController extends BaseController
 {
     /**
      * method is used to get a list of category from the MySQL database. 
@@ -20,7 +20,7 @@ class CategoryController extends BaseController
                     $intLimit = $arrQueryStringParams['limit'];
                 }
 
-                $arrProduct = CategoryModel::getCategory($intLimit); //fetch a list of users from a database
+                $arrProduct = ProductModel::getProduct($intLimit); //fetch a list of users from a database
                 $responseData = json_encode($arrProduct); //convert an array into a JSON object before it’s sent to the user
             } catch (Error $e) {
                 $strErrorDesc = $e->getMessage().'Something went wrong! Please contact support.';
