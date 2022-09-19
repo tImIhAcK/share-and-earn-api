@@ -35,7 +35,8 @@ if (!filter_var($data->email, FILTER_VALIDATE_EMAIL)) {
             if($user->register()){
                 $user_arr = array(
                     'status'=> true,
-                    'message'=> 'Account created succesfully'
+                    'message'=> 'Account created succesfully',
+                    "user_id"=> $user->id
                 );
             }
             echo json_encode($user_arr);

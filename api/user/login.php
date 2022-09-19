@@ -18,7 +18,7 @@ $stmt = $user->login();
 $rowCount = $stmt->rowCount();
 
 json_encode($rowCount);
-if ($rowCount > 0) {
+if ($rowCount === 1) {
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
         extract($row);
         if (password_verify($data->password, $user_password)) {

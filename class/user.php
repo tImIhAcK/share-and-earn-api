@@ -19,12 +19,12 @@ class User
 
     public function login(){
         $query = "SELECT id, user_fullname, user_email, phone_number, user_password FROM users
-                    WHERE user_email=:email";
+                    WHERE user_email=:user_email";
         $stmt = $this->conn->prepare($query);
 
         $this->email=htmlspecialchars(strip_tags($this->email));
         // bind data
-        $stmt->bindParam(":email", $this->email);
+        $stmt->bindParam(":user_email", $this->email);
         $stmt->execute();
         return $stmt;
     }
@@ -32,10 +32,10 @@ class User
     public function register(){
         $query = "INSERT INTO users
                 SET
-                    user_fullname = :fullname,
-                    user_email = :email,
+                    user_fullname = :user_fullname,
+                    user_email = :user_email,
                     phone_number=:phone_number,
-                    user_password = :password";
+                    user_password = :user_password";
     
         $stmt = $this->conn->prepare($query);
     
@@ -46,10 +46,10 @@ class User
         $this->password=htmlspecialchars(strip_tags($this->password));
     
         // bind data
-        $stmt->bindParam(":fullname", $this->fullname);
-        $stmt->bindParam(":email", $this->email);
-        $stmt->bindParam(":phone_number", $this->phone_number);
-        $stmt->bindParam(":password", password_hash($this->password, PASSWORD_BCRYPT));
+        $stmt->bindParam(":user_fullname", $this->fullname);
+        $stmt->bindParam(":user_email", $this->email);
+        $stmt->bindParam(":user_phone_number", $this->phone_number);
+        $stmt->bindParam(":user_password", password_hash($this->password, PASSWORD_BCRYPT));
 
         if ($this->userExist()) {
             echo json_encode(array("message"=> "User already exist"));
@@ -63,10 +63,10 @@ class User
     }
 
     function userExist(){
-        $query = "SELECT * FROM users WHERE user_email=:email";
+        $query = "SELECT * FROM users WHERE user_email=:user_email";
         $stmt = $this->conn->prepare($query);
 
-        $stmt->bindParam(":email", $this->email);
+        $stmt->bindParam(":user_email", $this->email);
         $stmt->execute();
 
         if ($stmt->rowCount() > 0) {
@@ -85,7 +85,7 @@ class User
     public function updateAccount(){
         $query = "UPDATE users
                 SET
-                    user_fullname=:fullname, 
+                    user_fullname=:user_fullname, 
                     phone_number=:phone_number
                 WHERE 
                     id=:id";
@@ -98,13 +98,50 @@ class User
     
         // bind data
         $stmt->bindParam(":id", $this->id);
-        $stmt->bindParam(":fullname", $this->fullname);
+        $stmt->bindParam(":user_fullname", $this->fullname);
         $stmt->bindParam(":phone_number", $this->phone_number);
     
         if($stmt->execute()){
             return true;
         }
         return false;
+    }
+
+    public function changePassword(){
+        $query = "SELECT user_password FROM users
+                    WHERE id=:id AND user_password=:user_password";
+        $stmt = $this->conn->prepare($query);
+
+        $this->old_password=htmlspecialchars(strip_tags($this->old_password));
+        $this->id=htmlspecialchars(strip_tags($this->id));
+
+        $stmt->bindParam(":id", $this->id);
+        $stmt->bindParam(":user_password", password_hash($this->old_password, PASSWORD_BCRYPT));
+
+        $stmt->execute();
+
+        if($stmt->rowCount() === 1){
+            $query = "UPDATE users
+                SET
+                    user_password=:user_password
+                WHERE 
+                    id=:id";
+                    $stmt = $this->conn->prepare($query);
+
+            $this->new_password=htmlspecialchars(strip_tags($this->new_password));
+            $this->id=htmlspecialchars(strip_tags($this->id));
+
+            $stmt->bindParam(":id", $this->id);
+            $stmt->bindParam(":user_password", password_hash($this->new_password, PASSWORD_BCRYPT));
+
+            if($stmt->execute()){
+                return true;
+            }
+            return false;
+        }else{
+            echo json_encode(array('message'=> 'Incorrect old password'));
+        }
+
     }
 
 }
