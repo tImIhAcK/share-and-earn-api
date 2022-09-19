@@ -11,19 +11,34 @@
     
     $database = new Database();
     $db = $database->connect();
-    $item = new Product($db);
+    $product = new Product($db);
     $data = json_decode(file_get_contents("php://input"));
     
-    $item->name = $data->name;
-    $item->description = $data->description;
-    $item->price = $data->price;
-    $item->image = $data->image;
-    $item->status = $data->status;
-    $item->category_id = $data->category_id;
-    
-    if($item->addProduct()){
-        echo 'Product added successfully.';
-    } else{
-        echo 'Product could not be added.';
+    if (
+        !empty($data->name)&&
+        !empty($data->description)&&
+        !empty($data->price)&&
+        !empty($data->image)&&
+        !empty($data->status)&&
+        !empty($data->category_id)
+    ) {
+
+        $product->name = $data->name;
+        $product->description = $data->description;
+        $product->price = $data->price;
+        $product->image = $data->image;
+        $product->status = $data->status;
+        $product->category_id = $data->category_id;
+        
+        if($product->addProduct()){
+            http_response_code(201);
+            echo json_encode(array('Message'=>'Product added successfully.'));
+        } else{
+            http_response_code(503);
+            echo json_encode(array("Message"=>'Product could not be added.'));
+        }
+    }else{
+        http_response_code(400);
+        echo json_encode(array("Message"=>'Data is imcolplete'));
     }
 ?>

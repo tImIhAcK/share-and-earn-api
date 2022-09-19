@@ -28,7 +28,7 @@ class Product
         return $stmt;
     }
 
-     public function addProduct(){
+    public function addProduct(){
         $query = "INSERT INTO
                     ". $this->db_table ."
                 SET
@@ -61,7 +61,7 @@ class Product
             return true;
         }
         return false;
-     }
+    }
 
 
     // used when filling up the update product form
@@ -98,15 +98,14 @@ class Product
         $query = "UPDATE
                     ". $this->db_table ."
                 SET
-                    name = :name, 
-                    description = :description, 
-                    image = :image, 
-                    price = :price, 
-                    status = :status,
-                    category_id = :category_id,
-
+                    name=:name, 
+                    description=:description, 
+                    image=:image, 
+                    price=:price, 
+                    status=:status,
+                    category_id=category_id
                 WHERE 
-                    id = :id";
+                    id=:id";
     
         $stmt = $this->conn->prepare($query);
     
@@ -116,8 +115,10 @@ class Product
         $this->price=htmlspecialchars(strip_tags($this->price));
         $this->status=htmlspecialchars(strip_tags($this->status));
         $this->category_id=htmlspecialchars(strip_tags($this->category_id));
+        $this->id=htmlspecialchars(strip_tags($this->id));
     
         // bind data
+        $stmt->bindParam(":id", $this->id);
         $stmt->bindParam(":name", $this->name);
         $stmt->bindParam(":description", $this->description);
         $stmt->bindParam(":image", $this->image);
