@@ -14,7 +14,7 @@ $product = new Product($db);
 $stmt = $product->getProduct();
 $itemCount = $stmt->rowCount();
 
-echo json_encode($itemCount);
+// echo json_encode($itemCount);
 if($itemCount > 0){
     
     $productsArr = array();
