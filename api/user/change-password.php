@@ -17,9 +17,9 @@ if($data->new_password1 !== $data->new_password2){
     echo json_encode(array('message'=>'New password do not match'));
 }
 else{
-    $user->$id = $data->$id;
+    $user->id = $data->id;
     $user->old_password = $data->old_password;
-    $user->new_password = $data->new_password2;
+    $user->new_password = $data->new_password1;
 
 
     if($user->changePassword()){
