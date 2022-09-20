@@ -35,7 +35,8 @@ class User
                     user_fullname = :user_fullname,
                     user_email = :user_email,
                     phone_number=:phone_number,
-                    user_password = :user_password";
+                    user_password = :user_password,
+                    referral_code=:referral_code";
     
         $stmt = $this->conn->prepare($query);
     
@@ -62,19 +63,32 @@ class User
         return false;
     }
 
-    function userExist(){
+    public function userExist(){
         $query = "SELECT * FROM users WHERE user_email=:user_email";
         $stmt = $this->conn->prepare($query);
 
         $stmt->bindParam(":user_email", $this->email);
         $stmt->execute();
 
-        if ($stmt->rowCount() > 0) {
+        if ($stmt->rowCount() == 1 ) {
             return true;
         }
         return false;
     }
 
+    public function validateReferralCode(){
+        $query = "SELECT * FROM users WHERE referral_code=:referral_code";
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bindParam(":referral_code", $this->referral_code);
+        $stmt->execute();
+
+        if ($stmt->rowCount() == 1) {
+            return true;
+        }
+        return false;
+    }
+    
     public function getUser(){
         $query = "SELECT * FROM users ORDER BY id DESC";
         $stmt = $this->conn->prepare($query);
