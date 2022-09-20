@@ -10,21 +10,22 @@ API to use with frontend
 File tree
 ```code
 .
-├── category.php
-├── Controller
-│   └── Api
+├── api
+│   ├── category
+│   ├── product
+│   └── user
+├── class
+│   ├── category.php
+│   ├── product.php
+│   └── user.php
+├── config
+│   ├── bootstrap.php
+│   └── database.php
 ├── images
 │   ├── electronics
 │   └── furniture
-├── inc
-│   ├── bootstrap.php
-│   └── config.php
-├── login.php
-├── Model
-│   ├── Database.php
-│   ├── MenuModel.php
-│   └── QueryModel.php
-├── product.php
 └── README.md
+
+9 directories, 6 files
 
 ```
