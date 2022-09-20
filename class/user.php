@@ -7,8 +7,6 @@ class User
     private $db_table = "users";
     // Columns
     public $id;
-    public $fullname;
-    public $email;
     public $phone_number;
     public $password;
 
@@ -18,13 +16,13 @@ class User
     }
 
     public function login(){
-        $query = "SELECT id, user_fullname, user_email, phone_number, user_password FROM users
-                    WHERE user_email=:user_email";
+        $query = "SELECT user_id, phone_number, user_password FROM users
+                    WHERE phone_number=:phone_number";
         $stmt = $this->conn->prepare($query);
 
-        $this->email=htmlspecialchars(strip_tags($this->email));
+        $this->phone_number=htmlspecialchars(strip_tags($this->phone_number));
         // bind data
-        $stmt->bindParam(":user_email", $this->email);
+        $stmt->bindParam(":phone_number", $this->phone_number);
         $stmt->execute();
         return $stmt;
     }
@@ -32,23 +30,17 @@ class User
     public function register(){
         $query = "INSERT INTO users
                 SET
-                    user_fullname = :user_fullname,
-                    user_email = :user_email,
                     phone_number=:phone_number,
-                    user_password = :user_password,
-                    referral_code=:referral_code";
+                    user_password = :user_password";
     
         $stmt = $this->conn->prepare($query);
     
         // sanitize
-        $this->fullname=htmlspecialchars(strip_tags($this->fullname));
-        $this->email=htmlspecialchars(strip_tags($this->email));
         $this->phone_number=htmlspecialchars(strip_tags($this->phone_number));
         $this->password=htmlspecialchars(strip_tags($this->password));
+
     
         // bind data
-        $stmt->bindParam(":user_fullname", $this->fullname);
-        $stmt->bindParam(":user_email", $this->email);
         $stmt->bindParam(":phone_number", $this->phone_number);
         $stmt->bindParam(":user_password", password_hash($this->password, PASSWORD_BCRYPT));
 
@@ -64,10 +56,10 @@ class User
     }
 
     public function userExist(){
-        $query = "SELECT * FROM users WHERE user_email=:user_email";
+        $query = "SELECT * FROM users WHERE phone_number=:phone_number";
         $stmt = $this->conn->prepare($query);
 
-        $stmt->bindParam(":user_email", $this->email);
+        $stmt->bindParam(":phone_number", $this->phone_number);
         $stmt->execute();
 
         if ($stmt->rowCount() == 1 ) {
@@ -90,7 +82,7 @@ class User
     }
     
     public function getUser(){
-        $query = "SELECT * FROM users ORDER BY id DESC";
+        $query = "SELECT * FROM users ORDER BY user_id ASC";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         return $stmt;

@@ -15,24 +15,16 @@ $order = new Order($db);
 $data = json_decode(file_get_contents("php://input"));
 
 if (
-    !empty($data->$fullname)&&
-    !empty($data->email)&&
-    !empty($data->address)&&
-    !empty($data->total)&&
-    !empty($data->product_id)&&
-    !empty($data->product_name)&&
-    !empty($data->price)&&
-    !empty($data->owner_id)
+    !empty($data->$oder_type)&&
+    !empty($data->order_quantity)&&
+    !empty($data->order_price)&&
+    !empty($data->order_owner)
 ) {
 
-    $order->fullname = $data->name;
-    $order->email = $data->email;
-    $order->address = $data->address;
-    $order->total = $data->total;
-    $order->product_id = $data->product_id;
-    $order->product_name = $data->product_name;
-    $order->total = $data->total;
-    $order->owner_id = $data->owner_id;
+    $order->order_type = $data->order_type;
+    $order->order_quantity = $data->order_quantity;
+    $order->order_price = $data->order_price;
+    $order->order_owner = $data->order_owner;
     
     if($product->addProduct()){
         http_response_code(201);

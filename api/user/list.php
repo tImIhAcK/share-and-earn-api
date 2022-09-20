@@ -18,14 +18,12 @@ $userCount = $stmt->rowCount();
 if($userCount > 0){
     
     $user_arr = array();
-    $user_arr["body"] = array();
     $user_arr["Total"] = $userCount;
+    $user_arr["body"] = array();
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
         extract($row);
         $userArr = array(
-            "id" => $id,
-            "fullname" => $user_fullname,
-            'email' => $user_email,
+            "user_id" => $user_id,
             "phone_number" => $phone_number
         );
         array_push($user_arr["body"], $userArr);

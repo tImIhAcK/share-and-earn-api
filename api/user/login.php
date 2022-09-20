@@ -13,20 +13,19 @@ $db = $database->connect();
 $user = new User($db);
 $data = json_decode(file_get_contents("php://input"));
 
-$user->email = $data->email;
+$user->phone_number = $data->phone_number;
 $stmt = $user->login();
 $rowCount = $stmt->rowCount();
 
-json_encode($rowCount);
-if ($rowCount === 1) {
+// echo json_encode($rowCount);
+if ($rowCount > 0) {
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
         extract($row);
         if (password_verify($data->password, $user_password)) {
             
             $user_details = array(
                 "message" => "logged in",
-                "id" => $id,
-                "full_name" => $user_fullname,
+                "user_id" => $user_id,
                 "phone_number" => $phone_number,
             );
         }else{

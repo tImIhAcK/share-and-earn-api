@@ -15,14 +15,11 @@ $db = $database->connect();
 $user = new User($db);
 $data = json_decode(file_get_contents("php://input"));
 
-if (!filter_var($data->email, FILTER_VALIDATE_EMAIL)) {
-    echo json_encode(array("message" => "Invalid Email"));
-}else{
-    if (!strlen($data->password) > 6) {
-        echo json_encode(array('message'=> "Password length too short. Must be greater than 6"));
-    }
-    else{
-        if(preg_match('/^[0-9]{11}+$/', $data->phone_number)){ 
+if(preg_match('/^[0-9]{11}+$/', $data->phone_number)){
+    if($data->password == $data->confirm_password){
+        if (strlen($data->password) > 6) {
+            $user->phone_number = $data->phone_number;
+            $user->password = $data->password;
             if($user->register()){
                 $user_arr = array(
                     'status'=> true,
@@ -30,8 +27,12 @@ if (!filter_var($data->email, FILTER_VALIDATE_EMAIL)) {
                 );
             }
             echo json_encode($user_arr);
-        }else{
-            echo json_encode(array('message'=> 'Invalid phone number'));
+        }else{    
+            echo json_encode(array('message'=> "Password length too short. Must be greater than 6"));
         }
+    }else{
+        echo json_encode(array("message"=>"Password not matching"));
     }
+}else{
+    echo json_encode(array('message'=> 'Invalid phone number'));
 }

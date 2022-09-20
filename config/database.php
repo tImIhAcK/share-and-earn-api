@@ -8,7 +8,7 @@ class Database
 {
 
 	private $db_host = "127.0.0.1";
-	private $db_name = "ubuy_schema";
+	private $db_name = "earn_and_share";
 	private $db_username = "root";
 	private $db_password = "m~adeNIR21:";
 	public $conn;
