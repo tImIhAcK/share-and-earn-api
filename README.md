@@ -12,9 +12,6 @@ File tree
 .
 ├── api
 │   └── index.php
-├── images
-│   ├── electronics
-│   └── furniture
 ├── inc
 │   └── fxn.php
 ├── README.md
@@ -26,6 +23,6 @@ File tree
     ├── UserController.php
     └── User.php
 
-6 directories, 9 files
+3 directories, 9 files
 
 ```
