@@ -37,4 +37,21 @@ class UserController
                 break;
         }
     }
+
+    public function validateRegisterData($data): array
+    {
+        $errors = [];
+        if(!preg_match('/^[0-9]{11}+$/', $data->phone_number)){
+            $errors[] = "Inavlid phone number";
+        }
+        if($data->password == $data->confirm_password){
+            if (strlen($data->password) > 6) {
+                $errors = "Password length too short. Must be greater than 6";
+            }
+        }else{
+            $errors[] = "Password not matching";
+        }
+        
+        return $errors;
+    }
 }
