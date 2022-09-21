@@ -91,7 +91,7 @@ class Order
         $stmt->bindParam(":order_owner", (int)$this->order_owner);
     
         if($stmt->execute()){
-            http_response_code(200);
+            http_response_code(201);
             return array('message'=>'Order made successfully.');
         }
         return array('message'=>'Something went wrong when making order... please try again');
