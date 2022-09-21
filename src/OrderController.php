@@ -30,6 +30,7 @@ class UserController
                 break;
             case "POST":
                 $data = (array) json_decode(file_get_contents("php://input", true));
+                http_response_code(201);
                 echo json_encode($this->order->create($data));
                 break;
             default:

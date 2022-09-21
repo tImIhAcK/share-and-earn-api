@@ -84,17 +84,32 @@ class Order
 
     
         // bind data
-        $stmt->bindParam(":order_no", $this->order_no);
-        $stmt->bindParam(":order_type", (string) $this->order_type);
-        $stmt->bindParam(":order_quantity", $this->order_quantity);
-        $stmt->bindParam(":order_price", $this->order_price);
-        $stmt->bindParam(":order_owner", (int)$this->order_owner);
+        $stmt->bindValue(":order_no", $this->order_no, PDO::PARAM_STR);
+        $stmt->bindValue(":order_type", $this->order_type, PDO::PARAM_STR);
+        $stmt->bindValue(":order_quantity", $this->order_quantity, PDO::PARAM_INT);
+        $stmt->bindValue(":order_price", $this->order_price, PDO::PARAM_INT);
+        $stmt->bindValue(":order_owner", (int)$this->order_owner, PDO::PARAM_INT);
     
         if($stmt->execute()){
-            http_response_code(201);
-            return array('message'=>'Order made successfully.');
+            $data = array();
+            $data["status"] = true;
+            $data['body'] = array();
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+                extract($row);
+                $data = array(
+                    "order_no" => $order_no,
+                    "order_type" => $order_type,
+                    "order_quantity"=>$order_quantity,
+                    "order_price"=>$order_price
+                );
+                array_push($data["body"], $data);
+            }
+            return $data;
         }
-        return array('message'=>'Something went wrong when making order... please try again');
+        return array(
+                    "status"=>false,
+                    'message'=>'Something went wrong when making order... please try again',
+                    );
     }
 
 }
