@@ -14,27 +14,20 @@ $orders = new Order($db);
 $stmt = $orders->getOrders();
 $orderCount = $stmt->rowCount();
 
-echo json_encode($orderCount);
-if($orderCount > 0){
-    
+if($orderCount > 0){    
     $orderArr = array();
-    $orderArr["body"] = array();
     $orderArr["Total orders"] = $orderCount;
+    $orderArr["order"] = array();
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
         extract($row);
         $order_item = array(
-            "id"=>$id,
-            "name"=>$fullname,
-            "email"=>$email,
-            "total"=>$total,
-            "product_id" => $product_id,
-            "product" => $product_name,
-            'price' => $price,
-            "onwer_id"=>$owner_id,
-            "order_id"=>$order_id,
-            "order_date"=>$created
+            "order_no"=>$order_no,
+            "order_type"=>$order_type,
+            "order_quantity"=>$order_quantity,
+            "order_price"=>$order_price,
+            "order_owner"=>$order_owner
         );
-        array_push($orderArr["body"], $order_item);
+        array_push($orderArr["order"], $order_item);
     }
     http_response_code(200);
     echo json_encode($orderArr);

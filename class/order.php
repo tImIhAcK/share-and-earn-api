@@ -11,6 +11,7 @@ class Order
     public $order_quantity;
     public $order_price;
     public $order_owner;
+    public $user_id;
 
     // Db connection
     public function __construct($db){
@@ -18,15 +19,19 @@ class Order
     }
 
     public function getOrders(){
-        $query = "SELECT * FROM" .$this->db_table. "ORDER BY id ASC";
+        $query = "SELECT * FROM " .$this->db_table. "";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         return $stmt;
     }
 
     public function getUserOrder(){
-        $query = "SELECT * FROM" .$this->db_table. "WHERE order_owner=:user_id";
+        $query = "SELECT * FROM " .$this->db_table. " WHERE order_owner=:user_id";
         $stmt = $this->conn->prepare($query);
+
+        $this->user_id=htmlspecialchars(strip_tags($this->user_id));
+        $stmt->bindParam(":user_id", $this->user_id);
+
         $stmt->execute();
         return $stmt;
     }
@@ -37,7 +42,7 @@ class Order
                 SET
                     order_no=:order_no, 
                     order_type=:order_type,
-                    order_quantity=order_quantity,
+                    order_quantity=:order_quantity,
                     order_price=:order_price,
                     order_owner=:order_owner";
     
@@ -55,7 +60,7 @@ class Order
         // bind data
         $stmt->bindParam(":order_no", $this->order_no);
         $stmt->bindParam(":order_type", $this->order_type);
-        $stmt->bindParam(":order_quantity", $this->order_type);
+        $stmt->bindParam(":order_quantity", $this->order_quantity);
         $stmt->bindParam(":order_price", $this->order_price);
         $stmt->bindParam(":order_owner", $this->order_owner);
     

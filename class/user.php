@@ -31,7 +31,7 @@ class User
         $query = "INSERT INTO users
                 SET
                     phone_number=:phone_number,
-                    user_password = :user_password";
+                    user_password=:user_password";
     
         $stmt = $this->conn->prepare($query);
     
