@@ -40,38 +40,25 @@ class User
     
         $stmt = $this->conn->prepare($query);
 
-        // validate
-        if(preg_match('/^[0-9]{11}+$/', $data->phone_number)){
-            if($data->password == $data->confirm_password){
-                if (strlen($data->password) > 6) {
-                    // sanitize
-                    $this->phone_number=htmlspecialchars(strip_tags($data->phone_number));
-                    $this->password=htmlspecialchars(strip_tags($data->password));
 
-                            // bind data
-                    $stmt->bindParam(":phone_number", $this->phone_number);
-                    $stmt->bindParam(":user_password", password_hash($this->password, PASSWORD_BCRYPT));
+        // sanitize
+        $this->phone_number=htmlspecialchars(strip_tags($data->phone_number));
+        $this->password=htmlspecialchars(strip_tags($data->password));
 
-                    if ($this->userExist()) {
-                        return array("message"=> "User already exist");
-                    }
-                
-                    if($stmt->execute()){
-                        $this->id = $this->conn->lastInsertId();
-                        return array("message"=> true);
-                    }
-                    return array("message"=> false);
-                    
-                }else{
-                    return array('message'=> "Password length too short. Must be greater than 6");
-                }
-            }else{
-                return array("message"=>"Password not matching");
-            }
-        }else{
-            return array('message'=> 'Invalid phone number');
+        // bind data
+        $stmt->bindParam(":phone_number", $this->phone_number);
+        $stmt->bindParam(":user_password", password_hash($this->password, PASSWORD_BCRYPT));
+
+        if ($this->userExist()) {
+            return array("message"=> "User already exist");
         }
-
+    
+        if($stmt->execute()){
+            $this->id = $this->conn->lastInsertId();
+            return array("message"=> true);
+        }
+        return array("message"=> false);
+                    
     }
 
 
