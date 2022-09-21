@@ -24,18 +24,28 @@ class UserController
 
     public function processCollectionRequest(string $method)
     {
-        switch ($method) {
+        switch ($method):
             case 'GET':
                 echo json_encode($this->user->getAll());
                 break;
             case "POST":
                 $data = json_decode(file_get_contents("php://input"));
+                $errors = $this->validateRegisterData($data);
+                if(!empty($errors)){
+                    http_response_code(422);
+                    echo json_encode(array("errors"=>$errors));
+                    break;
+                }
+
+                http_response_code(201);
                 echo json_encode($this->user->register($data));
                 break;
             default:
+                http_response_code(405);
+                header("Allow: GET, POST");
                 echo "Invalid Request Method";
                 break;
-        }
+        endswitch;
     }
 
     public function validateRegisterData($data): array
