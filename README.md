@@ -11,21 +11,21 @@ File tree
 ```code
 .
 ├── api
-│   ├── category
-│   ├── product
-│   └── user
-├── class
-│   ├── category.php
-│   ├── product.php
-│   └── user.php
-├── config
-│   ├── bootstrap.php
-│   └── database.php
+│   └── index.php
 ├── images
 │   ├── electronics
 │   └── furniture
-└── README.md
+├── inc
+│   └── fxn.php
+├── README.md
+└── src
+    ├── Database.php
+    ├── ErrorHandler.php
+    ├── OrderController.php
+    ├── Order.php
+    ├── UserController.php
+    └── User.php
 
-9 directories, 6 files
+6 directories, 9 files
 
 ```
