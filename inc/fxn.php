@@ -6,18 +6,24 @@ function userSwitch($url, $_db){
         case "get_users":
             $id = $url[4] ?? null;
             $user = new User($_db);
-            $controller =  new UserController($user);
+            $controller =  new UserController($user, $url);
             $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
             break;
+
         case "login":
             $id = $url[4] ?? null;
+            $user = new User($_db);
+            $controller =  new UserController($user, $url);
+            $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
             break;
+
         case "register":
             $id = $url[4] ?? null;
             $user = new User($_db);
-            $controller =  new UserController($user);
+            $controller =  new UserController($user, $url);
             $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
             break;
+
         default:
             http_response_code(404);
             echo json_encode(array("message" => 'File not found'));
@@ -29,19 +35,22 @@ function orderSwitch($url, $_db){
     switch ($url[3]):
         case "get_orders":
             $id = $url[4] ?? null;
-            $user = new User($_db);
-            $controller =  new UserController($user);
+            $order = new Order($_db);
+            $controller =  new OrderController($order);
             $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
             break;
+
         case "get_user_orders":
             $id = $url[4] ?? null;
             break;
+
         case "create":
             $id = $url[4] ?? null;
-            $user = new User($_db);
-            $controller =  new UserController($user);
+            $order = new Order($_db);
+            $controller =  new OrderController($order);
             $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
             break;
+            
         default:
             http_response_code(404);
             echo json_encode(array("message" => 'File not found'));

@@ -1,6 +1,6 @@
 <?php
 
-class UserController
+class OrderController
 {
     public function __construct(private Order $order)
     {
