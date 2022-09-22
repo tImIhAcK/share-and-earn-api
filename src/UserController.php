@@ -2,18 +2,18 @@
 
 class UserController
 {
-    public function __construct(private User $user, $url)
+    public function __construct(private User $user)
     {
         
     }
 
-    public function processRequest(string $method, ?string $id) : void
+    public function processRequest(string $method, ?string $id, ?string $url) : void
     {
         if($id){
             $this->processResourcesRequest($method, $id);
         }
         else{
-            $this->processCollectionRequest($method);
+            $this->processCollectionRequest($method, $url);
         }
     }
 
@@ -35,24 +35,34 @@ class UserController
         endswitch;
     }
 
-    public function processCollectionRequest(string $method)
+    public function processCollectionRequest(string $method, string $url)
     {
         switch ($method):
             case 'GET':
                 echo json_encode($this->user->getAll());
                 break;
             case "POST":
-                $data = json_decode(file_get_contents("php://input"));
-                $errors = $this->validateRegisterData($data);
-                if(!empty($errors)){
-                    http_response_code(422);
-                    echo json_encode(array("errors"=>$errors));
+                if ($url == 'register'){
+                    $data = json_decode(file_get_contents("php://input", true));
+                    $error = $this->validateRegisterData($data);
+                    if(!empty($error)){
+                        http_response_code(422);
+                        echo json_encode(array("error"=>$error));
+                        break;
+                    }
+                    $result = $this->user->register($data);
+                    http_response_code(201);
+                    echo json_encode($result);
                     break;
                 }
 
-                http_response_code(201);
-                echo json_encode($this->user->register($data));
-                break;
+                if($url == 'login'){
+                    $data = json_decode(file_get_contents("php://input", true));
+                    $result = $this->user->login($data);
+                    http_response_code(201);
+                    echo json_encode($result);
+                    break;
+                }
             default:
                 http_response_code(405);
                 header("Allow: GET, POST");
@@ -63,18 +73,24 @@ class UserController
 
     public function validateRegisterData($data): array
     {
-        $errors = [];
-        if(!preg_match('/^[0-9]{11}+$/', $data->phone_number)){
-            $errors[] = "Inavlid phone number";
-        }
-        if($data->password == $data->confirm_password){
-            if (strlen($data->password) > 6) {
-                $errors = "Password length too short. Must be greater than 6";
+        $error = [];
+        if (! empty($data)){
+            if(preg_match('/^[0-9]{11}+$/', $data->phone_number)){
+                if($data->password == $data->confirm_password){
+                    if (strlen($data->password) < 6) {
+                        $error = "Password length too short. Must be greater than 6";
+                    }else{
+                        $error = [];
+                    }
+                }else{
+                    $error[] = "Password not matching";
+                }
+            }else{
+                $error[] = "Inavlid phone number";
             }
         }else{
-            $errors[] = "Password not matching";
+            $error[] = "All fields are required";
         }
-        
-        return $errors;
+        return $error;
     }
 }

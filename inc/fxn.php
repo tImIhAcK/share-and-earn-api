@@ -7,21 +7,21 @@ function userSwitch($url, $_db){
             $id = $url[4] ?? null;
             $user = new User($_db);
             $controller =  new UserController($user, $url[3]);
-            $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
+            $controller->processRequest($_SERVER["REQUEST_METHOD"], $id, $url[3]);
             break;
 
         case "login":
             $id = $url[4] ?? null;
             $user = new User($_db);
             $controller =  new UserController($user, $url[3]);
-            $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
+            $controller->processRequest($_SERVER["REQUEST_METHOD"], $id, $url[3]);
             break;
 
         case "register":
             $id = $url[4] ?? null;
             $user = new User($_db);
             $controller =  new UserController($user, $url[3]);
-            $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
+            $controller->processRequest($_SERVER["REQUEST_METHOD"], $id, $url[3]);
             break;
 
         default:

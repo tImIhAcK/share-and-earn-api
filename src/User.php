@@ -15,7 +15,8 @@ class User
         $this->conn = $db;
     }
 
-    public function login(){
+    public function login($data):array
+    {
         $query =    "SELECT 
                         user_id, phone_number, user_password FROM users
                     WHERE 
@@ -23,11 +24,34 @@ class User
 
         $stmt = $this->conn->prepare($query);
 
-        $this->phone_number=htmlspecialchars(strip_tags($this->phone_number));
+        $this->phone_number=htmlspecialchars(strip_tags($data->phone_number));
+        $this->password=htmlspecialchars(strip_tags($data->password));
         // bind data
-        $stmt->bindParam(":phone_number", $this->phone_number);
+        $stmt->bindValue(":phone_number", $this->phone_number);
+
+        if(!$this->verifyPassword()){
+            return array("status"=>0, "message"=>"Invalid password");
+        }
+        
+        if($stmt->execute()){
+            return array("status"=>1, "message"=>"User logged in");
+        }
+        return array("status"=>0, "message"=>"Error occur");
+    }
+
+    public function verifyPassword(){
+        $query = "SELECT user_password FROM users WHERE phone_number=:phone_number";
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bindValue(":phone_number", $this->phone_number);
         $stmt->execute();
-        return $stmt;
+
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+            if(password_verify($this->password, $row['user_password'])){
+                return true;
+            }
+        }
+        return false;
     }
 
     public function register($data): array
@@ -46,18 +70,18 @@ class User
         $this->password=htmlspecialchars(strip_tags($data->password));
 
         // bind data
-        $stmt->bindParam(":phone_number", $this->phone_number);
-        $stmt->bindParam(":user_password", password_hash($this->password, PASSWORD_BCRYPT));
+        $stmt->bindValue(":phone_number", $this->phone_number);
+        $stmt->bindValue(":user_password", password_hash($this->password, PASSWORD_BCRYPT));
 
         if ($this->userExist()) {
-            return array("message"=> "User already exist");
+            return array("status"=>0,"message"=> "User already exist");
         }
     
         if($stmt->execute()){
             $this->id = $this->conn->lastInsertId();
-            return array("message"=> true);
+            return array("status"=> 1, "message"=>"Registration successfull");
         }
-        return array("message"=> false);
+        return array("status"=> 0, "message"=>"Error registering user");
                     
     }
 
