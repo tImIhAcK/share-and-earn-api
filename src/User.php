@@ -33,7 +33,7 @@ class User
         $stmt->bindValue(":phone_number", $this->phone_number);
 
         if(!$this->verifyPassword()){
-            return array("status"=>0, "message"=>"Invalid password");
+            return array("error"=>["status"=>0, "message"=>"Invalid password"]);
         }
         
         if($stmt->execute()){
@@ -41,7 +41,7 @@ class User
                 extract($row);
                 $payload = array(
                     'iss'=> 'localhost',
-                    'aud'=> 'localhost',
+                    'iat'=> time(),
                     'exp'=> time() + 20000,
                     'data' => [
                         'id'=> $user_id
@@ -50,11 +50,13 @@ class User
             }
             $secret_key = "earn_and_share";
             $jwt = JWT::encode($payload, $secret_key, 'HS256');
-            return array(
-                "status"=>1,
-                "token"=>$jwt,
-                "message"=>"logged in successfull"
-            );
+            return [
+                "success"=>[
+                    "status"=>1,
+                    "token"=>$jwt,
+                    "message"=>"logged in successfull"
+                    ]
+                ];
         }
         return array("status"=>0, "message"=>"Error occur");
     }
@@ -99,9 +101,9 @@ class User
     
         if($stmt->execute()){
             $this->id = $this->conn->lastInsertId();
-            return array("status"=> 1, "message"=>"Registration successfull");
+            return array("success"=>["status"=> 1, "message"=>"Registration successfull"]);
         }
-        return array("status"=> 0, "message"=>"Error registering user");
+        return array("error"=>["status"=> 0, "message"=>"Error registering user"]);
                     
     }
 
