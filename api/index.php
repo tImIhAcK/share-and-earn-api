@@ -2,24 +2,29 @@
 
 declare(strict_types=1);
 
-spl_autoload_register(function ($class) {
-    require "../src/$class.php";
-});
-
-set_error_handler("ErrorHandler::handleError");
-set_exception_handler("ErrorHandler::handleException");
-
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: GET, POST, PUT");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
+spl_autoload_register(function ($class) {
+    require "../src/$class.php";
+});
+
+set_error_handler("ErrorHandler::handleError");
+set_exception_handler("ErrorHandler::handleException");
+// include "../vendor/autoload.php";
+include "../inc/fxn.php";
+
+
 $database = new Database();
 $_db = $database->connect();
+// use Firebase\JWT\JWT;
+
+
 $url = explode("/", $_SERVER["REQUEST_URI"]);
 
-include "../inc/fxn.php";
 
 switch($url[2]):
     case "user":
