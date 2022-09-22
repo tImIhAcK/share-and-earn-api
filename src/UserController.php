@@ -17,9 +17,22 @@ class UserController
         }
     }
 
-    public function processResourcesRequest(string $method, string $sting): void
+    public function processResourcesRequest(string $method, string $id): void
     {
+        $result = $this->user->get($id);
+        if(! $result){
+            http_response_code(404);
+            echo json_encode(array("message"=>"user not found"));
+            return;
+        }
 
+        switch($method):
+            case "GET":
+                echo json_encode($result);
+                break;
+            case "PUT":
+                echo "";
+        endswitch;
     }
 
     public function processCollectionRequest(string $method)

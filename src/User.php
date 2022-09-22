@@ -79,6 +79,11 @@ class User
 
     public function getAll(): array
     {
+        // /**
+        //  * To get all the user from the database
+        //  * @param - 
+        //  * @return - associative array of users
+        //  */
         $query = "SELECT * FROM users";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
@@ -95,7 +100,26 @@ class User
             array_push($data["body"], $userArr);
         }
         return $data;
+    }
 
+    public function get(string $id): array
+    {
+        $query = "SELECT * FROM ".$this->db_table." WHERE user_id:=id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindValue(":id", $id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $data = array();
+        $data['body'] = array();
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+            extract($row);
+            $userArr = array(
+                "user_id" => $user_id,
+                "phone_number" => $phone_number
+            );
+            array_push($data["body"], $userArr);
+        }
+        return $data;
     }
 
 }

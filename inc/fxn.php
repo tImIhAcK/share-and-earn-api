@@ -6,21 +6,21 @@ function userSwitch($url, $_db){
         case "get_users":
             $id = $url[4] ?? null;
             $user = new User($_db);
-            $controller =  new UserController($user, $url);
+            $controller =  new UserController($user, $url[3]);
             $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
             break;
 
         case "login":
             $id = $url[4] ?? null;
             $user = new User($_db);
-            $controller =  new UserController($user, $url);
+            $controller =  new UserController($user, $url[3]);
             $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
             break;
 
         case "register":
             $id = $url[4] ?? null;
             $user = new User($_db);
-            $controller =  new UserController($user, $url);
+            $controller =  new UserController($user, $url[3]);
             $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
             break;
 
@@ -50,7 +50,7 @@ function orderSwitch($url, $_db){
             $controller =  new OrderController($order);
             $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
             break;
-            
+
         default:
             http_response_code(404);
             echo json_encode(array("message" => 'File not found'));
