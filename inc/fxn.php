@@ -1,5 +1,9 @@
 <?php
 
+// include "../vendor/autoload.php";
+// use Firebase\JWT\JWT;
+// use Firebase\JWT\Key;
+
 // User Function
 function userSwitch($url, $_db){
     switch ($url[3]):
@@ -67,3 +71,13 @@ function orderSwitch($url, $_db){
             break;
     endswitch;
 }
+
+// function decodeToken(){
+//     header("Authorization: ");
+//     $allheaders = getallheaders();
+//     $jwt = $allheaders['Authorization'];
+
+//     $secret_key = "earn_and_share";
+//     $user_data = JWT::decode($jwt, new Key($secret_key, "HS256"));
+//     $id = $user_data->data->id;
+// }

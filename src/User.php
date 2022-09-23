@@ -39,24 +39,32 @@ class User
         if($stmt->execute()){
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
                 extract($row);
-                $payload = array(
-                    'iss'=> 'localhost',
-                    'iat'=> time(),
-                    'exp'=> time() + 20000,
-                    'data' => [
-                        'id'=> $user_id
-                    ]
-                );
+
+                $id = $user_id; 
+                // $payload = array(
+                //     'iss'=> 'localhost',
+                //     'iat'=> time(),
+                //     'exp'=> time() + 20000,
+                //     'data' => [
+                //         'id'=> $user_id
+                //     ]
+                // );
             }
-            $secret_key = "earn_and_share";
-            $jwt = JWT::encode($payload, $secret_key, 'HS256');
-            return [
-                "success"=>[
-                    "status"=>1,
-                    "token"=>$jwt,
-                    "message"=>"logged in successfull"
-                    ]
-                ];
+            return ["success"=>[
+                "status"=>1,
+                "id"=>$id,
+                "message"=>'logged in'
+            ]];
+
+            // $secret_key = "earn_and_share";
+            // $jwt = JWT::encode($payload, $secret_key, 'HS256');
+            // return [
+            //     "success"=>[
+            //         "status"=>1,
+            //         "token"=>$jwt,
+            //         "message"=>"logged in successfull"
+            //         ]
+            //     ];
         }
         return array("status"=>0, "message"=>"Error occur");
     }
