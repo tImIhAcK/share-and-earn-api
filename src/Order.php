@@ -89,7 +89,7 @@ class Order
 
     public function get(string $id): array | false
     {
-        $query = "SELECT * FROM ".$this->db_table." WHERE order_owner:=id";
+        $query = "SELECT * FROM ".$this->db_table." WHERE order_owner=:id";
         $stmt = $this->conn->prepare($query);
         $stmt->bindValue(":id", $id, PDO::PARAM_INT);
         $stmt->execute();
