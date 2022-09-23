@@ -10,6 +10,13 @@ function userSwitch($url, $_db){
             $controller->processRequest($_SERVER["REQUEST_METHOD"], $id, $url[3]);
             break;
 
+        case "get":
+            $id = $url[4] ?? null;
+            $user = new User($_db);
+            $controller =  new UserController($user);
+            $controller->processRequest($_SERVER["REQUEST_METHOD"], $id, $url[3]);
+            break;
+
         case "login":
             $id = $url[4] ?? null;
             $user = new User($_db);

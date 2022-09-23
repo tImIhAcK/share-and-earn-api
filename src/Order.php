@@ -36,25 +36,6 @@ class Order
 
     }
 
-    public function get(string $id): array | false
-    {
-        $query = "SELECT * FROM ".$this->db_table." WHERE user_id:=id";
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindValue(":id", $id, PDO::PARAM_INT);
-        $stmt->execute();
-
-        $data = array();
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
-            extract($row);
-            $orderArr = array(
-                "user_id" => $user_id,
-                "phone_number" => $phone_number
-            );
-            array_push($data["body"], $orderArr); 
-        }
-        return $data;
-    }
-
     public function create($data): array
     {
         $query =    "INSERT INTO
@@ -104,6 +85,31 @@ class Order
                     "status"=>false,
                     'message'=>'Something went wrong when making order... please try again',
                     );
+    }
+
+    public function get(string $id): array | false
+    {
+        $query = "SELECT * FROM ".$this->db_table." WHERE order_owner:=id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindValue(":id", $id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $data = array();
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+            $data = $row;
+        }
+        return $data;
+    }
+
+
+    public function delete(string $id): int
+    {
+        $query =    "DELETE FROM ".$this->db_table." WHERE order_owner:=id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindValue(":id", $id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->rowCount();
     }
 
 }
