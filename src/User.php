@@ -128,7 +128,7 @@ class User
         // /**
         //  * To get all the user from the database
         //  * @param - 
-        //  * @return - associative array of users
+        //  * @return - associative array of order
         //  */
         $query = "SELECT * FROM users";
         $stmt = $this->conn->prepare($query);

@@ -40,8 +40,11 @@ function orderSwitch($url, $_db){
             $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
             break;
 
-        case "get_user_orders":
+        case "get":
             $id = $url[4] ?? null;
+            $order = new Order($_db);
+            $controller =  new OrderController($order);
+            $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
             break;
 
         case "create":

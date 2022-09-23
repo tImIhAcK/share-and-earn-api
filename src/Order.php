@@ -22,43 +22,37 @@ class Order
     {
         $query = "SELECT * FROM orders";
         $stmt = $this->conn->prepare($query);
+        $stmt->execute();
 
-        if($stmt->execute()){
-            $data = array();
-            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
-
-                $data = $row;
-            }
-            return $data;
+        $data = array();
+        $data['total user'] = $stmt->rowCount();
+        $data['body'] = array();
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+            extract($row);
+            $orderArr = $row;
+            array_push($data["body"], $orderArr);
         }
-        else{
-            return array("message"=> "No order found");
-        }
+        return $data;
 
     }
 
-    public function getUserOrder(){
-        $query =    "SELECT * 
-                    FROM 
-                        " .$this->db_table. "
-                    WHERE 
-                        order_owner=:user_id";
+    public function get(string $id): array | false
+    {
+        $query = "SELECT * FROM ".$this->db_table." WHERE user_id:=id";
         $stmt = $this->conn->prepare($query);
+        $stmt->bindValue(":id", $id, PDO::PARAM_INT);
+        $stmt->execute();
 
-        $this->user_id=htmlspecialchars(strip_tags($this->user_id));
-        $stmt->bindParam(":user_id", $this->user_id);
-
-        if($stmt->execute()){
-            $data = array();
-            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
-
-                $data = $row;
-            }
-            return $data;
+        $data = array();
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+            extract($row);
+            $orderArr = array(
+                "user_id" => $user_id,
+                "phone_number" => $phone_number
+            );
+            array_push($data["body"], $orderArr); 
         }
-        else{
-            return array("message"=> "No order yet");
-        }
+        return $data;
     }
 
     public function create($data): array
@@ -96,13 +90,13 @@ class Order
             $data['body'] = array();
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
                 extract($row);
-                $data = array(
+                $orderArr = array(
                     "order_no" => $order_no,
                     "order_type" => $order_type,
                     "order_quantity"=>$order_quantity,
                     "order_price"=>$order_price
                 );
-                array_push($data["body"], $data);
+                array_push($data["body"], $orderArr);
             }
             return $data;
         }
