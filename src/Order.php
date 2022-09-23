@@ -104,7 +104,7 @@ class Order
 
     public function delete(string $id): int
     {
-        $query =    "DELETE FROM ".$this->db_table." WHERE order_owner:=id";
+        $query =    "DELETE FROM ".$this->db_table." WHERE order_owner=:id";
         $stmt = $this->conn->prepare($query);
         $stmt->bindValue(":id", $id, PDO::PARAM_INT);
         $stmt->execute();
