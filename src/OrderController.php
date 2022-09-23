@@ -28,6 +28,7 @@ class OrderController
             case "GET":
                 echo json_encode($result);
                 break;
+
             case "DELETE":
                 $row = $this->order->delete($id);
                 echo json_encode([
