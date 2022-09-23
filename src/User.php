@@ -150,7 +150,7 @@ class User
 
     public function get(string $id): array | false
     {
-        $query = "SELECT * FROM ".$this->db_table." WHERE user_id:=id";
+        $query = "SELECT * FROM ".$this->db_table." WHERE user_id=:id";
         $stmt = $this->conn->prepare($query);
         $stmt->bindValue(":id", $id, PDO::PARAM_INT);
         $stmt->execute();
@@ -170,7 +170,7 @@ class User
 
     public function delete(string $id): int
     {
-        $query =    "DELETE FROM ".$this->db_table." WHERE user_id:=id";
+        $query =    "DELETE FROM ".$this->db_table." WHERE user_id=:id";
         $stmt = $this->conn->prepare($query);
         $stmt->bindValue(":id", $id, PDO::PARAM_INT);
         $stmt->execute();
