@@ -30,8 +30,20 @@ class UserController
             case "GET":
                 echo json_encode($result);
                 break;
-            case "PUT":
-                echo "";
+            case "DELETE":
+                $row = $this->user->get($id);
+                echo json_encode([
+                    "deleted"=>[
+                        "message"=>"User with ".$id." deleted",
+                        "row"=>$row
+
+                    ]
+                ]);
+                break;
+            default:
+                http_response_code(405);
+                header("Allow: GET, DELETE");
+                break;
         endswitch;
     }
 

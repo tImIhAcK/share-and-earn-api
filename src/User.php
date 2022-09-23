@@ -148,7 +148,7 @@ class User
         return $data;
     }
 
-    public function get(string $id): array
+    public function get(string $id): array | false
     {
         $query = "SELECT * FROM ".$this->db_table." WHERE user_id:=id";
         $stmt = $this->conn->prepare($query);
@@ -166,6 +166,16 @@ class User
             array_push($data["body"], $userArr);
         }
         return $data;
+    }
+
+    public function delete(string $id): int
+    {
+        $query =    "DELETE FROM ".$this->db_table." WHERE user_id:=id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindValue(":id", $id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->rowCount();
     }
 
 }
