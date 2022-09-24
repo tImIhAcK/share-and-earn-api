@@ -177,7 +177,7 @@ class User
 
         $data = array();
         $data['total user'] = $stmt->rowCount();
-        $data['body'] = array();
+        $data['users'] = array();
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
             extract($row);
             $userArr = array(
@@ -197,12 +197,13 @@ class User
         $stmt->execute();
 
         $data = array();
-        $data['body'] = array();
+        $data['user'] = array();
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
             extract($row);
             $userArr = array(
                 "user_id" => $user_id,
-                "phone_number" => $phone_number
+                "phone_number" => $phone_number,
+                "ref_code"=>$ref_code,
             );
             array_push($data["body"], $userArr);
         }
