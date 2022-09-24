@@ -31,10 +31,10 @@ class UserController
                 echo json_encode($result);
                 break;
             case "DELETE":
-                $row = $this->user->get($id);
+                $row = $this->user->delete($id);
                 echo json_encode([
                     "deleted"=>[
-                        "message"=>"User with ".$id." deleted",
+                        "message"=>"User with id ".$id." deleted",
                         "row"=>$row
 
                     ]
@@ -42,7 +42,7 @@ class UserController
                 break;
             default:
                 http_response_code(405);
-                header("Allow: GET, DELETE");
+                header("Allow: GET, POST, DELETE");
                 break;
         endswitch;
     }
