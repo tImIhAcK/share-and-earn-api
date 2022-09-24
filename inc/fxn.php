@@ -65,6 +65,12 @@ function orderSwitch($url, $_db){
             $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
             break;
 
+        case "delete":
+            $id = $url[4] ?? null;
+            $order = new Order($_db);
+            $controller =  new OrderController($order);
+            $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
+            break;
         default:
             http_response_code(404);
             echo json_encode(array("message" => 'File not found'));
