@@ -130,12 +130,12 @@ function transSwitch($url, $_db){
     }
 }
 
-// Bank Controller Function
+// Product Controller Function
 function productSwitch($url, $_db){
 
     $id = $url[4] ?? null;
-    $trans = new Transaction($_db);
-    $controller =  new TransactionController($trans);
+    $prod = new Product($_db);
+    $controller =  new ProductController($prod);
 
     switch ($url[3]) {
         case 'create':
