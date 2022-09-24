@@ -106,6 +106,8 @@ class User
         if ($ref_id){
             $this->refer = $ref_id;
             $stmt->bindValue(":refer", $this->refer);
+        }else{
+            $stmt->binidValue(":refer", "");
         }
 
         // bind data
