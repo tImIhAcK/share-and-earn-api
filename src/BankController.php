@@ -30,6 +30,16 @@ class BankController
             case "GET":
                 echo json_encode($result);
                 break;
+            case "PUT":
+                $data = json_decode(file_get_contents("php://input", true));
+    
+                $rows = $this->bank->update($result, $data);
+                http_response_code(200);
+                echo json_encode([
+                    "message"=> "Bank details updated",
+                    "rows"=>$rows
+                ]);
+                break;
             case "DELETE":
                 $row = $this->bank->delete($id);
                 echo json_encode([
@@ -41,7 +51,7 @@ class BankController
                 break;
             default:
                 http_response_code(405);
-                header("Allow: GET, DELETE");
+                header("Allow: GET, PUT, DELETE");
                 break;
         endswitch;
     }
@@ -57,14 +67,9 @@ class BankController
                 http_response_code(201);
                 echo json_encode($this->bank->create($data));
                 break;
-            // case "PUT":
-            //     $data = json_decode(file_get_contents("php://input", true));
-            //     http_response_code(201);
-            //     echo json_encode($this->bank->update($data));
-            //     break;
-            // default:
+            default:
                 http_response_code(405);
-                header("Allow: GET, POST, PUT");
+                header("Allow: GET, POST");
                 echo "Invalid Request Method";
                 break;
         endswitch;

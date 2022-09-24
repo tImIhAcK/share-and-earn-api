@@ -54,12 +54,12 @@ class Bank
     public function create($data): array
     {
         $query =    "INSERT INTO
-                    ". $this->db_table ."
+                        ". $this->db_table ."
                     SET
-                    acct_name=:acct_name,
-                    bank_name=:bank_name,
-                    acct_no=:acct_no,
-                    user_id=:user_id";
+                        acct_name=:acct_name,
+                        bank_name=:bank_name,
+                        acct_no=:acct_no,
+                        user_id=:user_id";
         
         $stmt = $this->conn->prepare($query);
     
@@ -90,6 +90,29 @@ class Bank
                     "status"=>false,
                     'message'=>'Something went wrong... please try again',
                     );
+    }
+
+    public function update(array $current, array $new): int
+    {
+        $query =    "UPDATE
+                    ". $this->db_table ."
+                    SET
+                        acct_name=:acct_name,
+                        bank_name=:bank_name,
+                        acct_no=:acct_no
+                    WHERE
+                        user_id=:id";
+        
+        $stmt = $this->conn->prepare($query);
+    
+        // bind data
+        $stmt->bindValue(":acct_name", $new['acct_name'] ?? $current['acct_name'], PDO::PARAM_STR);
+        $stmt->bindValue(":bank_name", $new['bank_name'] ?? $current['bank_name'], PDO::PARAM_STR);
+        $stmt->bindValue(":acct_no", $new['acct_no'] ?? $current['acct_no'], PDO::PARAM_INT);
+    
+        $stmt->execute();
+        return $stmt->rowCount();
+
     }
 
     public function delete(string $id): int

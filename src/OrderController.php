@@ -28,6 +28,16 @@ class OrderController
             case "GET":
                 echo json_encode($result);
                 break;
+            // case "PUT":
+            //     $data = json_decode(file_get_contents("php://input", true));
+    
+            //     $rows = $this->order->update($result, $data);
+            //     http_response_code(200);
+            //     echo json_encode([
+            //         "message"=> "Bank details updated",
+            //         "rows"=>$rows
+            //     ]);
+            //     break;
 
             case "DELETE":
                 $row = $this->order->delete($id);

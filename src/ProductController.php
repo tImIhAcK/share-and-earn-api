@@ -30,6 +30,16 @@ class ProductController
             case "GET":
                 echo json_encode($result);
                 break;
+            case "PUT":
+                $data = json_decode(file_get_contents("php://input", true));
+    
+                $rows = $this->prod->update($result, $data);
+                http_response_code(200);
+                echo json_encode([
+                    "message"=> "Product updated",
+                    "rows"=>$rows
+                ]);
+                break;
             case "DELETE":
                 $row = $this->prod->delete($id);
                 echo json_encode([

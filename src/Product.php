@@ -89,6 +89,29 @@ class Product
                     );
     }
 
+public function update(array $current, array $new): int
+    {
+        $query =    "UPDATE
+                    ". $this->db_table ."
+                    SET
+                        prod_name=:prod_name,
+                        prod_price=:prod_price,
+                        prod_desc=:prod_desc
+                    WHERE
+                        user_id=:id";
+        
+        $stmt = $this->conn->prepare($query);
+    
+        // bind data
+        $stmt->bindValue(":acct_name", $new['acct_name'] ?? $current['acct_name'], PDO::PARAM_STR);
+        $stmt->bindValue(":prod_price", $new['prod_price'] ?? $current['prod_price'], PDO::PARAM_STR);
+        $stmt->bindValue(":prod_desc", $new['prod_desc'] ?? $current['prod_desc'], PDO::PARAM_INT);
+    
+        $stmt->execute();
+        return $stmt->rowCount();
+
+    }
+
     public function delete(string $id): int
     {
         $query =  "DELETE FROM ".$this->db_table." WHERE prod_id=:id";
