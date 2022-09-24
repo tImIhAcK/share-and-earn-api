@@ -177,14 +177,14 @@ class User
 
         $data = array();
         $data['total user'] = $stmt->rowCount();
-        $data['users'] = array();
+        $data['user'] = array();
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
             extract($row);
             $userArr = array(
                 "user_id" => $user_id,
                 "phone_number" => $phone_number
             );
-            array_push($data["body"], $userArr);
+            array_push($data["user"], $userArr);
         }
         return $data;
     }
@@ -212,7 +212,7 @@ class User
 
     public function delete(string $id): int
     {
-        $query =    "DELETE FROM ".$this->db_table." WHERE user_id=:id";
+        $query ="DELETE FROM ".$this->db_table." WHERE user_id=:id";
         $stmt = $this->conn->prepare($query);
         $stmt->bindValue(":id", $id, PDO::PARAM_INT);
         $stmt->execute();
