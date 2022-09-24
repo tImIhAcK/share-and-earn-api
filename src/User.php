@@ -90,7 +90,9 @@ class User
                         users
                     SET
                         phone_number=:phone_number,
-                        user_password=:user_password";
+                        user_password=:user_password,
+                        refer=:refer,
+                        ref_code=:ref_code";
     
         $stmt = $this->conn->prepare($query);
 
@@ -99,9 +101,17 @@ class User
         $this->phone_number=htmlspecialchars(strip_tags($data->phone_number));
         $this->password=htmlspecialchars(strip_tags($data->password));
 
+        // Verify the refer code
+        $ref_id = $this->verifyRefer($data); 
+        if ($ref_id){
+            $this->refer = $ref_id;
+            $stmt->bindValue(":refer", $this->refer);
+        }
+
         // bind data
         $stmt->bindValue(":phone_number", $this->phone_number);
         $stmt->bindValue(":user_password", password_hash($this->password, PASSWORD_BCRYPT));
+        $stmt->bindValue(":ref_code", $this->generateReferCode());
 
         if ($this->userExist()) {
             return array("status"=>0,"message"=> "User already exist");
@@ -128,6 +138,27 @@ class User
             return true;
         }
         return false;
+    }
+
+    public function verifyRefer($data){
+        $query = "SELECT user_id FROM users WHERE ref_code=:refer_code";
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bindParam(":refer_code", $data->refer_code);
+        $stmt->execute();
+
+        if ($stmt->rowCount() == 1 ) {
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+                extract($row);
+                return $user_id;
+            }
+        }
+        return false;
+    }
+
+    public function generateReferCode(){
+        $cstrong = true;
+	    return strtoupper(date("dis")."".bin2hex(openssl_random_pseudo_bytes(2, $cstrong)));
     }
 
 

@@ -1,5 +1,6 @@
 {
     "require": {
-        "firebase/php-jwt": "^6.3"
+        "firebase/php-jwt": "^6.3",
+        "coinbase/coinbase-commerce": "^1.0"
     }
 }
