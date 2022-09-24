@@ -37,6 +37,12 @@ switch($url[2]):
     case "bank":
         bankSwitch($url, $_db);
         break;
+    case "transaction":
+        transSwitch($url, $_db);
+        break;
+    case "product":
+        productSwitch($url, $_db);
+        break;
     default:
         http_response_code(404);
         echo json_encode(array("message"=>"File not fouond"));

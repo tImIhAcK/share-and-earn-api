@@ -130,6 +130,40 @@ function transSwitch($url, $_db){
     }
 }
 
+// Bank Controller Function
+function productSwitch($url, $_db){
+
+    $id = $url[4] ?? null;
+    $trans = new Transaction($_db);
+    $controller =  new TransactionController($trans);
+
+    switch ($url[3]) {
+        case 'create':
+            $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
+            break;
+
+        case "get_banks":
+            $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
+            break;
+
+        case "get":
+            $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
+            break;
+
+        case "update":
+            $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
+            break;
+
+        case "delete":
+            $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
+            break;
+        default:
+            http_response_code(404);
+            echo json_encode(array("message" => 'File not found'));
+            break;
+    }
+}
+
 // function decodeToken(){
 //     header("Authorization: ");
 //     $allheaders = getallheaders();
