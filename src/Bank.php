@@ -10,7 +10,7 @@ class Bank
     private $db_table = "banks";
     // Columns
     public $id;
-    public $back_name;
+    public $bank_name;
     public $acct_name;
     public $acct_no;
 
@@ -59,7 +59,7 @@ class Bank
                     acct_name=:acct_name,
                     bank_name=:bank_name,
                     acct_no=:acct_no,
-                    bank_id=:bank_id";
+                    user_id=:user_id";
         
         $stmt = $this->conn->prepare($query);
     
@@ -67,14 +67,14 @@ class Bank
         $this->acct_name=htmlspecialchars(strip_tags($data->acct_name));
         $this->bank_name=htmlspecialchars(strip_tags($data->bank_name));
         $this->acct_no=htmlspecialchars(strip_tags($data->acct_no));
-        $this->bank_id=htmlspecialchars(strip_tags($data->id));
+        $this->user_id=htmlspecialchars(strip_tags($data->id));
 
     
         // bind data
         $stmt->bindValue(":acct_name", $this->acct_name, PDO::PARAM_STR);
         $stmt->bindValue(":bank_name", $this->bank_name, PDO::PARAM_STR);
         $stmt->bindValue(":acct_no", $this->acct_no, PDO::PARAM_INT);
-        $stmt->bindValue(":bank_id", (int)$this->bank_id, PDO::PARAM_INT);
+        $stmt->bindValue(":user_id", (int)$this->user_id, PDO::PARAM_INT);
     
         if($stmt->execute()){
             $data = array();
@@ -94,7 +94,7 @@ class Bank
 
     public function delete(string $id): int
     {
-        $query =    "DELETE FROM ".$this->db_table." WHERE bank_id=:id";
+        $query =  "DELETE FROM ".$this->db_table." WHERE user_id=:id";
         $stmt = $this->conn->prepare($query);
         $stmt->bindValue(":id", $id, PDO::PARAM_INT);
         $stmt->execute();
