@@ -69,6 +69,4 @@ class BankController
                 break;
         endswitch;
     }
-
-
 }

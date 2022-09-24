@@ -72,6 +72,42 @@ function orderSwitch($url, $_db){
     endswitch;
 }
 
+function bankSwitch($url, $_db){
+    switch ($url[3]) {
+        case 'create':
+            $id = $url[4] ?? null;
+            $bank = new Bank($_db);
+            $controller =  new BankController($bank);
+            $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
+            break;
+
+        case "get_banks":
+            $id = $url[4] ?? null;
+            $bank = new Bank($_db);
+            $controller =  new BankController($bank);
+            $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
+            break;
+
+        case "get":
+            $id = $url[4] ?? null;
+            $bank = new Bank($_db);
+            $controller =  new BankController($bank);
+            $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
+            break;
+
+        case "delete":
+            $id = $url[4] ?? null;
+            $bank = new Bank($_db);
+            $controller =  new BankController($bank);
+            $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
+            break;
+        default:
+            http_response_code(404);
+            echo json_encode(array("message" => 'File not found'));
+            break;
+    }
+}
+
 // function decodeToken(){
 //     header("Authorization: ");
 //     $allheaders = getallheaders();

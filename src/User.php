@@ -205,7 +205,7 @@ class User
                 "phone_number" => $phone_number,
                 "ref_code"=>$ref_code,
             );
-            array_push($data["body"], $userArr);
+            array_push($data["user"], $userArr);
         }
         return $data;
     }
