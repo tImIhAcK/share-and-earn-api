@@ -26,11 +26,11 @@ class Order
 
         $data = array();
         $data['total user'] = $stmt->rowCount();
-        $data['body'] = array();
+        $data['order'] = array();
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
-            extract($row);
-            $orderArr = $row;
-            array_push($data["body"], $orderArr);
+            // extract($row);
+            $data['order'] = $row;
+            
         }
         return $data;
 
@@ -45,7 +45,7 @@ class Order
                         order_type=:order_type,
                         order_quantity=:order_quantity,
                         order_price=:order_price,
-                        order_owner=:order_owner";
+                        user_id=:user_id";
         
         $stmt = $this->conn->prepare($query);
     
@@ -54,7 +54,7 @@ class Order
         $this->order_type=htmlspecialchars(strip_tags($data->order_type));
         $this->order_quantity=htmlspecialchars(strip_tags($data->order_quantity));
         $this->order_price=htmlspecialchars(strip_tags($data->order_price));
-        $this->order_owner=htmlspecialchars(strip_tags($data->order_owner));
+        $this->user_id=htmlspecialchars(strip_tags($data->user_id));
         // $this->order_id=strtoupper(bin2hex(random_bytes(8)));
 
     
@@ -63,12 +63,12 @@ class Order
         $stmt->bindValue(":order_type", $this->order_type, PDO::PARAM_STR);
         $stmt->bindValue(":order_quantity", $this->order_quantity, PDO::PARAM_INT);
         $stmt->bindValue(":order_price", $this->order_price, PDO::PARAM_INT);
-        $stmt->bindValue(":order_owner", (int)$this->order_owner, PDO::PARAM_INT);
+        $stmt->bindValue(":user_id", (int)$this->user_id, PDO::PARAM_INT);
     
         if($stmt->execute()){
             $data = array();
             $data["status"] = true;
-            $data['body'] = array();
+            $data['order'] = array();
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
                 extract($row);
                 $orderArr = array(
@@ -77,7 +77,7 @@ class Order
                     "order_quantity"=>$order_quantity,
                     "order_price"=>$order_price
                 );
-                array_push($data["body"], $orderArr);
+                array_push($data["order"], $orderArr);
             }
             return $data;
         }
@@ -89,14 +89,15 @@ class Order
 
     public function get(string $id): array | false
     {
-        $query = "SELECT * FROM ".$this->db_table." WHERE order_owner=:id";
+        $query = "SELECT * FROM ".$this->db_table." WHERE user_id=:id";
         $stmt = $this->conn->prepare($query);
         $stmt->bindValue(":id", $id, PDO::PARAM_INT);
         $stmt->execute();
 
         $data = array();
+        $data['order'] = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
-            $data = $row;
+            $data['order'] = $row;
         }
         return $data;
     }
@@ -104,7 +105,7 @@ class Order
 
     public function delete(string $id): int
     {
-        $query =    "DELETE FROM ".$this->db_table." WHERE order_owner=:id";
+        $query = "DELETE FROM ".$this->db_table." WHERE order_owner=:id";
         $stmt = $this->conn->prepare($query);
         $stmt->bindValue(":id", $id, PDO::PARAM_INT);
         $stmt->execute();
