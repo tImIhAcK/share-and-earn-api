@@ -28,6 +28,10 @@ function userSwitch($url, $_db){
             $controller->processRequest($_SERVER["REQUEST_METHOD"], $id, $url[3]);
             break;
 
+        case "delete":
+            $controller->processRequest($_SERVER["REQUEST_METHOD"], $id, $url[3]);
+            break;
+
         default:
             http_response_code(404);
             echo json_encode(array("message" => 'File not found'));

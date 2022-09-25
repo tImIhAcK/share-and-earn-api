@@ -53,7 +53,7 @@ class User
             return ["success"=>[
                 "status"=>1,
                 "user_id"=>$id,
-                "message"=>'logged in'
+                "message"=>'logged in successful'
             ]];
 
             // $secret_key = "earn_and_share";
@@ -91,6 +91,8 @@ class User
                     SET
                         phone_number=:phone_number,
                         user_password=:user_password,
+                        user_email=:user_email,
+                        user_role=:user_role
                         refer=:refer,
                         ref_code=:ref_code";
     
@@ -100,6 +102,14 @@ class User
         // sanitize
         $this->phone_number=htmlspecialchars(strip_tags($data->phone_number));
         $this->password=htmlspecialchars(strip_tags($data->password));
+        $this->user_email=htmlspecialchars(strip_tags($data->email));
+
+        if(!empty($data->role)){
+            $this->role=htmlspecialchars(strip_tags($data->role));
+            $stmt->bindValue(':user_role', $this->role);
+        }else{
+            $stmt->bindValue(':user_role', "");
+        }
 
         // Verify the refer code
         $ref_id = $this->verifyRefer($data); 
@@ -115,8 +125,12 @@ class User
         $stmt->bindValue(":user_password", password_hash($this->password, PASSWORD_BCRYPT));
         $stmt->bindValue(":ref_code", $this->generateReferCode());
 
-        if ($this->userExist()) {
-            return array("status"=>0,"message"=> "User already exist");
+        if ($this->phoneExist()) {
+            return array("status"=>0,"message"=> "Phone number already exist");
+        }
+
+        if ($this->emailExist()) {
+            return array("status"=>0,"message"=> "Email already exist");
         }
     
         if($stmt->execute()){
@@ -128,12 +142,26 @@ class User
     }
 
 
-    public function userExist(): bool
+    public function phoneExist(): bool
     {
         $query = "SELECT * FROM users WHERE phone_number=:phone_number";
         $stmt = $this->conn->prepare($query);
 
         $stmt->bindParam(":phone_number", $this->phone_number);
+        $stmt->execute();
+
+        if ($stmt->rowCount() == 1 ) {
+            return true;
+        }
+        return false;
+    }
+
+    public function emailExist(): bool
+    {
+        $query = "SELECT * FROM users WHERE user_email=:user_email";
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bindParam(":user_email", $this->user_email);
         $stmt->execute();
 
         if ($stmt->rowCount() == 1 ) {
@@ -182,7 +210,8 @@ class User
             extract($row);
             $userArr = array(
                 "user_id" => $user_id,
-                "phone_number" => $phone_number
+                "phone_number" => $phone_number,
+                "user_email"=>$user_email,
             );
             array_push($data["user"], $userArr);
         }
@@ -203,6 +232,7 @@ class User
             $userArr = array(
                 "user_id" => $user_id,
                 "phone_number" => $phone_number,
+                "email"=>$user_email,
                 "ref_code"=>$ref_code,
             );
             array_push($data["user"], $userArr);

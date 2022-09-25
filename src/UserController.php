@@ -34,7 +34,7 @@ class UserController
                 $row = $this->user->delete($id);
                 echo json_encode([
                     "deleted"=>[
-                        "message"=>"User with id ".$id." deleted",
+                        "message"=>"User deleted",
                         "row"=>$row
 
                     ]
@@ -86,7 +86,7 @@ class UserController
     public function validateRegisterData($data): array
     {
         $error = [];
-        if (! empty($data)){
+        if (filter_var($data->email, FILTER_VALIDATE_EMAIL)) {
             if(preg_match('/^[0-9]{11}+$/', $data->phone_number)){
                 if($data->password == $data->confirm_password){
                     if (strlen($data->password) < 6) {
@@ -101,7 +101,7 @@ class UserController
                 $error[] = "Inavlid phone number";
             }
         }else{
-            $error[] = "All fields are required";
+            $error[] = "Invalid Email";
         }
         return $error;
     }
