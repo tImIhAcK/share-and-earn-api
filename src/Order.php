@@ -7,7 +7,7 @@ class Order
     // Columns
     // public $order_id;
     public $order_no;
-    public $order_type;
+    public $order_prod;
     public $order_quantity;
     public $order_price;
     public $order_owner;
@@ -42,7 +42,7 @@ class Order
                     ". $this->db_table ."
                     SET
                     order_no=:order_no, 
-                        order_type=:order_type,
+                        order_prod=:order_prod,
                         order_quantity=:order_quantity,
                         order_price=:order_price,
                         user_id=:user_id";
@@ -51,7 +51,7 @@ class Order
     
         // sanitize
         $this->order_no=date("YmdHis")."".random_int(1000, 9999);
-        $this->order_type=htmlspecialchars(strip_tags($data->order_type));
+        $this->order_prod=htmlspecialchars(strip_tags($data->order_prod));
         $this->order_quantity=htmlspecialchars(strip_tags($data->order_quantity));
         $this->order_price=htmlspecialchars(strip_tags($data->order_price));
         $this->user_id=htmlspecialchars(strip_tags($data->user_id));
@@ -60,7 +60,7 @@ class Order
     
         // bind data
         $stmt->bindValue(":order_no", $this->order_no, PDO::PARAM_STR);
-        $stmt->bindValue(":order_type", $this->order_type, PDO::PARAM_STR);
+        $stmt->bindValue(":order_prod", $this->order_prod, PDO::PARAM_STR);
         $stmt->bindValue(":order_quantity", $this->order_quantity, PDO::PARAM_INT);
         $stmt->bindValue(":order_price", $this->order_price, PDO::PARAM_INT);
         $stmt->bindValue(":user_id", (int)$this->user_id, PDO::PARAM_INT);
@@ -73,7 +73,7 @@ class Order
                 extract($row);
                 $orderArr = array(
                     "order_no" => $order_no,
-                    "order_type" => $order_type,
+                    "order_prod" => $order_prod,
                     "order_quantity"=>$order_quantity,
                     "order_price"=>$order_price
                 );

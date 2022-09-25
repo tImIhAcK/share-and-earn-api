@@ -43,9 +43,8 @@ switch($url[2]):
     case "product":
         productSwitch($url, $_db);
         break;
-    // case "payment":
-    //     new Payment;
-    //     break;
+    case "admin":
+        break;
     default:
         http_response_code(404);
         echo json_encode(array("message"=>"File not fouond"));
