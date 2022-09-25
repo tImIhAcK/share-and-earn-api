@@ -34,9 +34,9 @@ switch($url[2]):
     case "order":
         orderSwitch($url, $_db);
         break;
-    case "bank":
-        bankSwitch($url, $_db);
-        break;
+    // case "bank":
+    //     bankSwitch($url, $_db);
+    //     break;
     case "transaction":
         transSwitch($url, $_db);
         break;
@@ -44,7 +44,7 @@ switch($url[2]):
         productSwitch($url, $_db);
         break;
     case "admin":
-        break;
+        adminSwitch($url, $_db);
     default:
         http_response_code(404);
         echo json_encode(array("message"=>"File not fouond"));

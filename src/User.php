@@ -91,8 +91,7 @@ class User
                     SET
                         phone_number=:phone_number,
                         user_password=:user_password,
-                        user_email=:user_email,
-                        user_role=:user_role
+                        user_email=:user_email,ser_role
                         refer=:refer,
                         ref_code=:ref_code";
     
@@ -103,13 +102,6 @@ class User
         $this->phone_number=htmlspecialchars(strip_tags($data->phone_number));
         $this->password=htmlspecialchars(strip_tags($data->password));
         $this->user_email=htmlspecialchars(strip_tags($data->email));
-
-        if(!empty($data->role)){
-            $this->role=htmlspecialchars(strip_tags($data->role));
-            $stmt->bindValue(':user_role', $this->role);
-        }else{
-            $stmt->bindValue(':user_role', "");
-        }
 
         // Verify the refer code
         $ref_id = $this->verifyRefer($data); 

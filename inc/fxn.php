@@ -4,6 +4,30 @@
 // use Firebase\JWT\JWT;
 // use Firebase\JWT\Key;
 
+
+// Admin switch function
+function adminSwitch($url, $_db){
+
+    $id = $url[4] ?? null;
+    $admin = new Admin($_db);
+    $controller =  new AdminController($admin, $url[3]);
+
+    switch ($url[3]):
+        case "login":
+            $controller->processRequest($_SERVER["REQUEST_METHOD"], $id, $url[3]);
+            break;
+
+        case "register":
+            $controller->processRequest($_SERVER["REQUEST_METHOD"], $id, $url[3]);
+            break;
+
+        default:
+            http_response_code(404);
+            echo json_encode(array("message" => 'File not found'));
+            break;
+    endswitch;
+}
+
 // User Controller  Function
 function userSwitch($url, $_db){
 
@@ -70,35 +94,35 @@ function orderSwitch($url, $_db){
     endswitch;
 }
 
-// Bank Controller Function
-function bankSwitch($url, $_db){
+// // Bank Controller Function
+// function bankSwitch($url, $_db){
 
-    $id = $url[4] ?? null;
-    $bank = new Bank($_db);
-    $controller =  new BankController($bank);
+//     $id = $url[4] ?? null;
+//     $bank = new Bank($_db);
+//     $controller =  new BankController($bank);
 
-    switch ($url[3]) {
-        case 'create':
-            $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
-            break;
+//     switch ($url[3]) {
+//         case 'create':
+//             $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
+//             break;
 
-        case "get_banks":
-            $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
-            break;
+//         case "get_banks":
+//             $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
+//             break;
 
-        case "get":
-            $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
-            break;
+//         case "get":
+//             $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
+//             break;
 
-        case "delete":
-            $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
-            break;
-        default:
-            http_response_code(404);
-            echo json_encode(array("message" => 'File not found'));
-            break;
-    }
-}
+//         case "delete":
+//             $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
+//             break;
+//         default:
+//             http_response_code(404);
+//             echo json_encode(array("message" => 'File not found'));
+//             break;
+//     }
+// }
 
 // Bank Controller Function
 function transSwitch($url, $_db){
