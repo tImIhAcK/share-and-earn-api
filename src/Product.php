@@ -103,7 +103,7 @@ public function update(array $current, array $new): int
         $stmt = $this->conn->prepare($query);
     
         // bind data
-        $stmt->bindValue(":acct_name", $new['acct_name'] ?? $current['acct_name'], PDO::PARAM_STR);
+        $stmt->bindValue(":prod_name", $new['prod_name'] ?? $current['prod_name'], PDO::PARAM_STR);
         $stmt->bindValue(":prod_price", $new['prod_price'] ?? $current['prod_price'], PDO::PARAM_STR);
         $stmt->bindValue(":prod_desc", $new['prod_desc'] ?? $current['prod_desc'], PDO::PARAM_INT);
     
