@@ -101,7 +101,7 @@ class Admin
                         phone_number=:phone_number,
                         user_password=:user_password,
                         user_email=:user_email,
-                        user_role=:user_role,
+                        role=:role,
                         isAdmin=:isAdmin,
                         ref_code=:ref_code";
     
@@ -113,13 +113,13 @@ class Admin
         $this->email=htmlspecialchars(strip_tags($data->email));
         $this->password=htmlspecialchars(strip_tags($data->password));
         $this->user_email=htmlspecialchars(strip_tags($data->email));
-        $this->user_role=htmlspecialchars(strip_tags($data->role));
+        $this->role=htmlspecialchars(strip_tags($data->role));
 
         // bind data
         $stmt->bindValue(":phone_number", $this->phone_number);
         $stmt->bindValue(":user_password", password_hash($this->password, PASSWORD_BCRYPT));
         $stmt->bindValue(":user_email", $this->email);
-        $stmt->bindValue(":user_role", $this->role);
+        $stmt->bindValue(":role", $this->role);
         $stmt->bindValue(":isAdmin", 1, PDO::PARAM_BOOL);
         $stmt->bindValue(":ref_code", $this->generateReferCode(), PDO::PARAM_STR);
 
