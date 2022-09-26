@@ -116,6 +116,7 @@ class User
 
         // bind data
         $stmt->bindValue(":phone_number", $this->phone_number);
+        $stmt->bindValue(":user_email", $this->user_email);
         $stmt->bindValue(":user_password", password_hash($this->password, PASSWORD_BCRYPT));
         $stmt->bindValue(":ref_code", $this->generateReferCode());
 
@@ -206,6 +207,7 @@ class User
                 "user_id" => $user_id,
                 "phone_number" => $phone_number,
                 "user_email"=>$user_email,
+                "refer_code"=>$ref_code
             );
             array_push($data["user"], $userArr);
         }
