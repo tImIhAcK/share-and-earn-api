@@ -59,7 +59,7 @@ class UserController
                     $error = $this->validateRegisterData($data);
                     if(!empty($error)){
                         http_response_code(422);
-                        echo json_encode(array("error"=>$error));
+                        echo json_encode(array("status"=>0,"message"=>$error));
                         break;
                     }
                     $result = $this->user->register($data);

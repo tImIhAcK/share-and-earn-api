@@ -12,6 +12,8 @@ class User
     public $id;
     public $phone_number;
     public $password;
+    public $user_email;
+    public $refer;
 
     // Db connection
     public function __construct($db){
@@ -87,11 +89,11 @@ class User
     public function register($data): array
     {
         $query =    "INSERT INTO 
-                        users
+                        ".$this->db_table."
                     SET
                         phone_number=:phone_number,
                         user_password=:user_password,
-                        user_email=:user_email,ser_role
+                        user_email=:user_email,
                         refer=:refer,
                         ref_code=:ref_code";
     
@@ -224,7 +226,7 @@ class User
             $userArr = array(
                 "user_id" => $user_id,
                 "phone_number" => $phone_number,
-                "email"=>$user_email,
+                "user_email"=>$user_email,
                 "ref_code"=>$ref_code,
             );
             array_push($data["user"], $userArr);
