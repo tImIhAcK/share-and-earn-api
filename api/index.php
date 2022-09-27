@@ -52,3 +52,10 @@ switch($url[2]):
         break;
 endswitch;
 
+
+
+
+//mysql://b89e1db581d092:7afa7e0f@us-cdbr-east-06.cleardb.net/heroku_1a4914ed9299b35?reconnect=true
+// DB_USERNAME: b89e1db581d092
+// DB_PASS: 7afa7e0f
+// DB_HOST: us-cdbr-east-06.cleardb.net
