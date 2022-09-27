@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-header("Access-Control-Allow-Origin: localhost:8801");
+header("Access-Control-Allow-Origin: localhost:8801, https://share-and-earn-api.herokuapp.com/");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");
 header("Authorization: Basic ");
