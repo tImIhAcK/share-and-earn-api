@@ -18,13 +18,14 @@ set_exception_handler("ErrorHandler::handleException");
 // include "../vendor/autoload.php";
 include "../inc/fxn.php";
 
-
 $database = new Database();
 $_db = $database->connect();
 // use Firebase\JWT\JWT;
 
 
 $url = explode("/", $_SERVER["REQUEST_URI"]);
+
+echo $_SERVER['REQUEST_URI'];
 
 
 switch($url[2]):
