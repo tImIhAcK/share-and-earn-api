@@ -10,13 +10,13 @@ header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
 spl_autoload_register(function ($class) {
-    require "../src/$class.php";
+    require "src/$class.php";
 });
 
 set_error_handler("ErrorHandler::handleError");
 set_exception_handler("ErrorHandler::handleException");
 // include "../vendor/autoload.php";
-include "../inc/fxn.php";
+include "inc/fxn.php";
 
 $database = new Database();
 $_db = $database->connect();
