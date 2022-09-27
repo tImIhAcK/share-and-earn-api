@@ -12,15 +12,24 @@ class Database
 	// private $db_username = "root";
 	// private $db_password = "m~adeNIR21:";
 
-	private $cleardb_url = parse_url(getenv("DATABASE_URL"));
-	private $cleardb_server = $this->cleardb_url["host"];
-	private $cleardb_username = $this->cleardb_url["user"];
-	private $cleardb_password = $this->cleardb_url["pass"];
-	private $cleardb_db = substr($this->cleardb_url["path"],1);
+	private $cleardb_url;
+	private $cleardb_server;
+	private $cleardb_username;
+	private $cleardb_password;
+	private $cleardb_db;
 	public $conn;
 
 	const ATTR_EMULATE_PREPARES = false;
 	const ATTR_STRINGIFY_FETCHES = false;
+
+	public function __construct()
+	{
+		$this->cleardb_url = parse_url(getenv('DATABASE_URL'));
+		$this->cleardb_server = $this->cleardb_url["host"];
+		$this->cleardb_username = $this->cleardb_url["user"];
+		$this->cleardb_password = $this->cleardb_url["pass"];
+		$this->cleardb_db = substr($this->cleardb_url["path"],1);
+	}
 	
 	public  function connect(){
 		$this->conn = null;
