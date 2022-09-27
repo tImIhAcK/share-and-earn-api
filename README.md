@@ -11,18 +11,35 @@ File tree
 ```code
 .
 ├── api
-│   └── index.php
+│   ├── create-new-password.php
+│   ├── index.php
+│   ├── payment.php
+│   └── reset_request.php
+├── composer.json
+├── composer.lock
 ├── inc
 │   └── fxn.php
 ├── README.md
-└── src
-    ├── Database.php
-    ├── ErrorHandler.php
-    ├── OrderController.php
-    ├── Order.php
-    ├── UserController.php
-    └── User.php
-
-3 directories, 9 files
-
+├── src
+│   ├── AdminController.php
+│   ├── Admin.php
+│   ├── Database.php
+│   ├── ErrorHandler.php
+│   ├── OrderController.php
+│   ├── Order.php
+│   ├── ProductController.php
+│   ├── Product.php
+│   ├── TransactionController.php
+│   ├── Transaction.php
+│   ├── UserController.php
+│   └── User.php
+└── vendor
+    ├── autoload.php
+    ├── coinbase
+    ├── composer
+    ├── firebase
+    ├── guzzlehttp
+    ├── psr
+    ├── ralouphie
+    └── symfony
 ```
