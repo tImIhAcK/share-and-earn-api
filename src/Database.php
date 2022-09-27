@@ -12,7 +12,7 @@ class Database
 	// private $db_username = "root";
 	// private $db_password = "m~adeNIR21:";
 
-	private $cleardb_url = parse_url(getenv("CLEARDB_DATABASE_URL"));
+	private $cleardb_url = parse_url(getenv("DATABASE_URL"));
 	private $cleardb_server = $this->cleardb_url["host"];
 	private $cleardb_username = $this->cleardb_url["user"];
 	private $cleardb_password = $this->cleardb_url["pass"];
