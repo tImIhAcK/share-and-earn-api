@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-header("Access-Control-Allow-Origin: localhost:8801, https://share-and-earn-api.herokuapp.com/");
+header("Access-Control-Allow-Origin: localhost, https://share-and-earn-api.herokuapp.com/");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");
 header("Authorization: Basic ");
@@ -10,13 +10,13 @@ header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
 spl_autoload_register(function ($class) {
-    require "src/$class.php";
+    require "../src/$class.php";
 });
 
 set_error_handler("ErrorHandler::handleError");
 set_exception_handler("ErrorHandler::handleException");
-// include "../vendor/autoload.php";
-include "inc/fxn.php";
+include "../vendor/autoload.php";
+include "../inc/fxn.php";
 
 $database = new Database();
 $_db = $database->connect();
@@ -24,11 +24,9 @@ $_db = $database->connect();
 
 
 $url = explode("/", $_SERVER["REQUEST_URI"]);
+echo $url[2];
 
-echo $_SERVER['REQUEST_URI'];
-
-
-switch($url[2]):
+switch($url[3]):
     case "user":
         userSwitch($url, $_db);
         break;
