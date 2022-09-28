@@ -24,7 +24,7 @@ $_db = $database->connect();
 
 
 $url = explode("/", $_SERVER["REQUEST_URI"]);
-echo $url[2];
+echo $url[1];
 
 switch($url[3]):
     case "user":
