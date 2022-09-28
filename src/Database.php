@@ -34,7 +34,7 @@ class Database
 	public  function connect(){
 		$this->conn = null;
 		try{
-			$this->conn = new PDO("mysql:host=" . $this->cleardb_server . ";dbname=" . $this->cleardb_udb, $this->cleardb_username, $this->cleardb_password);
+			$this->conn = new PDO("mysql:host=" . $this->cleardb_server . ";dbname=" . $this->cleardb_db, $this->cleardb_username, $this->cleardb_password);
 			$this->conn->setAttribute(PDO::ATTR_EMULATE_PREPARES, PDO::ATTR_STRINGIFY_FETCHES);
 			$this->conn->exec("set names utf8");
 		} catch (PDOException $e) {
