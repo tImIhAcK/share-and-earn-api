@@ -32,9 +32,6 @@ switch($url[2]):
     case "order":
         orderSwitch($url, $_db);
         break;
-    // case "bank":
-    //     bankSwitch($url, $_db);
-    //     break;
     case "transaction":
         transSwitch($url, $_db);
         break;

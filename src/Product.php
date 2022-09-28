@@ -21,15 +21,27 @@ class Product
 
     public function getAll(): array
     {
-        $query = "SELECT * FROM ".$this->db_table."";
+        // /**
+        //  * To get all the products from the database
+        //  * @param - 
+        //  * @return - associative array of product
+        //  */
+        $query = "SELECT * FROM products";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
 
         $data = array();
-        $data['product'] = array();
+        $data['total product'] = $stmt->rowCount();
+        $data['products'] = array();
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
-            // extract($row);
-            $data['product'] = $row;
+            extract($row);
+            $prodArr = array(
+                "prod_id" => $prod_id,
+                "prod_name" => $prod_name,
+                "prod_price"=>$prod_price,
+                "prod_desc"=>$prod_desc
+            );
+            array_push($data["products"], $prodArr);
         }
         return $data;
     }
@@ -56,7 +68,7 @@ class Product
         $query =    "INSERT INTO
                     ". $this->db_table ."
                     SET
-                    prod_name=:prodt_name,
+                    prod_name=:prod_name,
                     prod_price=:prod_price,
                     prod_desc=:prod_desc";
         
