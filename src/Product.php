@@ -39,7 +39,9 @@ class Product
                 "prod_id" => $prod_id,
                 "prod_name" => $prod_name,
                 "prod_price"=>$prod_price,
-                "prod_desc"=>$prod_desc
+                "prod_desc"=>$prod_desc,
+                "hourly_income"=>$hourly_income,
+                "saving_time"=>$saving_time
             );
             array_push($data["products"], $prodArr);
         }
@@ -53,12 +55,18 @@ class Product
         $stmt->bindValue(":id", $id, PDO::PARAM_INT);
         $stmt->execute();
 
-        $data = array();
-        $data['prod'] = array();
+        $data['products'] = array();
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
             extract($row);
-            $data['prod'] = $row;
-
+            $prodArr = array(
+                "prod_id" => $prod_id,
+                "prod_name" => $prod_name,
+                "prod_price"=>$prod_price,
+                "prod_desc"=>$prod_desc,
+                "hourly_income"=>$hourly_income,
+                "saving_time"=>$saving_time
+            );
+            array_push($data["products"], $prodArr);
         }
         return $data;
     }
@@ -68,22 +76,28 @@ class Product
         $query =    "INSERT INTO
                     ". $this->db_table ."
                     SET
-                    prod_name=:prod_name,
-                    prod_price=:prod_price,
-                    prod_desc=:prod_desc";
+                        prod_name=:prod_name,
+                        prod_price=:prod_price,
+                        prod_desc=:prod_desc,
+                        hourly_income=:hourly_income,
+                        saving_time=:saving_time";
         
         $stmt = $this->conn->prepare($query);
     
         // sanitize
         $this->prod_name=htmlspecialchars(strip_tags($data->prod_name));
         $this->prod_price=htmlspecialchars(strip_tags($data->prod_price));
-        $this->prod_desc=htmlspecialchars(strip_tags($data->prod_sc));
+        $this->prod_desc=htmlspecialchars(strip_tags($data->prod_desc));
+        $this->hourl_income=htmlspecialchars(strip_tags($data->hourly_income));
+        $this->saving_time=htmlspecialchars(strip_tags($data->saving_time));
 
     
         // bind data
         $stmt->bindValue(":prod_name", $this->prod_name, PDO::PARAM_STR);
         $stmt->bindValue(":prod_price", $this->prod_price, PDO::PARAM_INT);
         $stmt->bindValue(":prod_desc", $this->prod_desc, PDO::PARAM_STR);
+        $stmt->bindValue(":hourly_income", $this->hourly_income);
+        $stmt->bindValue(":saving_time", $this->saving_time, PDO::PARAM_STR);
     
         if($stmt->execute()){
             $data = array();
@@ -108,7 +122,9 @@ public function update(array $current, array $new): int
                     SET
                         prod_name=:prod_name,
                         prod_price=:prod_price,
-                        prod_desc=:prod_desc
+                        prod_desc=:prod_desc,
+                        hourly_income=:hourly_income,
+                        saving_time=:saving_time
                     WHERE
                         user_id=:id";
         
@@ -118,6 +134,8 @@ public function update(array $current, array $new): int
         $stmt->bindValue(":prod_name", $new['prod_name'] ?? $current['prod_name'], PDO::PARAM_STR);
         $stmt->bindValue(":prod_price", $new['prod_price'] ?? $current['prod_price'], PDO::PARAM_STR);
         $stmt->bindValue(":prod_desc", $new['prod_desc'] ?? $current['prod_desc'], PDO::PARAM_INT);
+        $stmt->bindValue(":hourly_income", $new['hourly_income'] ?? $current['hourly_income']);
+        $stmt->bindValue(":saving_time", $new['saving_time'] ?? $current['saving_time']);
     
         $stmt->execute();
         return $stmt->rowCount();

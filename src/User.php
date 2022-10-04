@@ -23,7 +23,14 @@ class User
     public function login($data):array
     {
         $query =    "SELECT 
-                        user_id, phone_number, user_password FROM users
+                        w.address as wallet_address, w.balance  as balance, user_id, phone_number, 
+                        user_email, user_password 
+                    FROM 
+                        users
+                    LEFT JOIN
+                        wallet w
+                    ON
+                        user.id = w.user_id
                     WHERE 
                         phone_number=:phone_number";
 
@@ -39,10 +46,22 @@ class User
         }
         
         if($stmt->execute()){
+            $data = array();
+            $data['user'] = array();
+
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
                 extract($row);
+                $userArr = [
+                    'user_id'=> $user_id,
+                    'phone_number'=>$phone_number,
+                    'email'=>$user_email,
+                    'wallet_address'=>$wallet_address,
+                    'balance'=>$balance
+                ];
+                array_push($data['user'], $userArr);
+            }
+            return $data;
 
-                $id = $user_id; 
                 // $payload = array(
                 //     'iss'=> 'localhost',
                 //     'iat'=> time(),
@@ -51,13 +70,6 @@ class User
                 //         'id'=> $user_id
                 //     ]
                 // );
-            }
-            return ["success"=>[
-                "status"=>1,
-                "user_id"=>$id,
-                "message"=>'logged in successful'
-            ]];
-
             // $secret_key = "earn_and_share";
             // $jwt = JWT::encode($payload, $secret_key, 'HS256');
             // return [
@@ -130,7 +142,8 @@ class User
     
         if($stmt->execute()){
             $this->id = $this->conn->lastInsertId();
-            return array("success"=>["status"=> 1, "message"=>"Registration successfull"]);
+            $this->createWallet();
+            return array("success"=>["status"=> 1, "message"=>"Registration successful"]);
         }
         return array("error"=>["status"=> 0, "message"=>"Error registering user"]);
                     
@@ -186,6 +199,20 @@ class User
 	    return strtoupper(date("dis")."".bin2hex(openssl_random_pseudo_bytes(2, $cstrong)));
     }
 
+    public function createWallet(){
+        $query =    "INSERT INTO
+                        wallet
+                    SET
+                        user_id=:id
+                        wallet_address=:wallet_address,
+                        balance=:balance
+                    ";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindValue(":id", $this->id);
+        $stmt->execute();
+        
+    }
+
 
     public function getAll(): array
     {
@@ -232,8 +259,6 @@ class User
                 "phone_number" => $phone_number,
                 "user_email"=>$user_email,
                 "ref_code"=>$ref_code,
-                "refer_count"=>$refer_count,
-                "balance"=>$balance
             );
             array_push($data["user"], $userArr);
         }

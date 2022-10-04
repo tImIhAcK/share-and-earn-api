@@ -39,3 +39,47 @@ try {
     http_response_code(400);
     echo 'Error occured. ' . $exception->getMessage();
 }
+
+
+function update($_db): array
+{
+    $query =    "UPDATE
+                    transactions
+                SET
+                    trans_status=:trans_status
+                WHERE
+                    ";
+    
+    $stmt = $_db->conn->prepare($query);
+
+    // sanitize
+    $trans_type=htmlspecialchars(strip_tags($_POST['trans_type']));
+    $trans_amt=htmlspecialchars(strip_tags($_POST['trans_amt']));
+    $user_id=htmlspecialchars(strip_tags($_POST['user_id']));
+
+
+    // bind data
+    $stmt->bindValue(":trans_type", $trans_type, PDO::PARAM_STR);
+    $stmt->bindValue(":trans_amt", $trans_amt, PDO::PARAM_INT);
+    $stmt->bindValue(":trans_status", 'Initialized', PDO::PARAM_STR);
+    $stmt->bindValue(":user_id", $user_id, PDO::PARAM_INT);
+
+    if($stmt->execute()){
+        $data = array();
+        $data['transaction'] = array();
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+            extract($row);
+            $transArr = [
+                'trans_type'=> $trans_type,
+                'trans_amt'=>$trans_amt,
+                'trans_status'=>$trans_status
+            ];
+            array_push($data['transaction'], $transArr);
+        }
+        return $data;
+    }
+    return array(
+                "status"=>false,
+                'message'=>'Something went wrong... please try again',
+                );
+}

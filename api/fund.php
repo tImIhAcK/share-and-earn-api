@@ -52,6 +52,8 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 $result = curl_exec($ch);
 curl_close ($ch);
 $response = json_decode($result);
+echo $response;
+exit;
 
 // Add to transaaction database
 create($_db);
