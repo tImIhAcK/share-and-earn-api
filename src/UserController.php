@@ -87,18 +87,14 @@ class UserController
     {
         $error = [];
         if (filter_var($data->email, FILTER_VALIDATE_EMAIL)) {
-            if(preg_match('/^[0-9]{11}+$/', $data->phone_number)){
-                if($data->password == $data->confirm_password){
-                    if (strlen($data->password) < 6) {
-                        $error = "Password length too short. Must be greater than 6";
-                    }else{
-                        $error = [];
-                    }
+            if($data->password == $data->confirm_password){
+                if (strlen($data->password) < 6) {
+                    $error = "Password length too short. Must be greater than 6";
                 }else{
-                    $error[] = "Password not matching";
+                    $error = [];
                 }
             }else{
-                $error[] = "Inavlid phone number";
+                $error[] = "Password not matching";
             }
         }else{
             $error[] = "Invalid Email";

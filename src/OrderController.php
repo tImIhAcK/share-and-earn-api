@@ -64,8 +64,11 @@ class OrderController
                 break;
             case "POST":
                 $data = json_decode(file_get_contents("php://input", true));
-                http_response_code(201);
-                echo json_encode($this->order->create($data));
+
+                if($this->validateAmount($data)){
+                    http_response_code(201);
+                    echo json_encode($this->order->create($data));
+                }
                 break;
             default:
                 http_response_code(405);
@@ -73,5 +76,20 @@ class OrderController
                 echo "Invalid Request Method";
                 break;
         endswitch;
+    }
+
+    public function validateAmount($data){
+        $query = "SELECT balance FROM wallet WHERE user_id=:id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindValue(':id', $data->user_id);
+        $stmt->execute();
+
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+            extract($row);
+            if($data->order_price > $balance){
+                return true;
+            }
+        }
+        return array('status'=>0, 'message'=>'insufficient balance');
     }
 }

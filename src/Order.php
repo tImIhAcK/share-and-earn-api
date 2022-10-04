@@ -41,7 +41,7 @@ class Order
         $query =    "INSERT INTO
                     ". $this->db_table ."
                     SET
-                    order_no=:order_no, 
+                        order_no=:order_no, 
                         order_prod=:order_prod,
                         order_quantity=:order_quantity,
                         order_price=:order_price,
