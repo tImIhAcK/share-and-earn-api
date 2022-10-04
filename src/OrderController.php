@@ -65,10 +65,11 @@ class OrderController
             case "POST":
                 $data = json_decode(file_get_contents("php://input", true));
 
-                if($this->validateAmount($data)){
-                    http_response_code(201);
-                    echo json_encode($this->order->create($data));
+                if(!$this->validateAmount($data)){
+                    return array('status'=>0, 'message'=>'insufficient balance');
                 }
+                http_response_code(201);
+                echo json_encode($this->order->create($data));
                 break;
             default:
                 http_response_code(405);
@@ -90,6 +91,6 @@ class OrderController
                 return true;
             }
         }
-        return array('status'=>0, 'message'=>'insufficient balance');
+        return false;
     }
 }
