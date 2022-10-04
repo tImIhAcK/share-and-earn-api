@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-header("Access-Control-Allow-Origin: localhost:8801");
+header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST");
 header("Authorization: Basic ");
@@ -53,7 +53,7 @@ $result = curl_exec($ch);
 curl_close ($ch);
 $response = json_decode($result);
 
-// Add to database
+// Add to transaaction database
 create($_db);
 return $response->data->hosted_url;
 

@@ -77,12 +77,12 @@ class Transaction
     public function create($data): array
     {
         $query =    "INSERT INTO
-                    ". $this->db_table ."
+                        ". $this->db_table ."
                     SET
-                    trans_type=:trans_type,
-                    trans_amt=:trans_amt,
-                    user_id=:user_id,
-                    trans_status=:trans_status";
+                        trans_type=:trans_type,
+                        trans_amt=:trans_amt,
+                        user_id=:user_id,
+                        trans_status=:trans_status";
         
         $stmt = $this->conn->prepare($query);
     
@@ -96,9 +96,9 @@ class Transaction
     
         // bind data
         $stmt->bindValue(":trans_type", $this->trans_type, PDO::PARAM_STR);
-        $stmt->bindValue(":trans_amt", $this->bank_name, PDO::PARAM_INT);
+        $stmt->bindValue(":trans_amt", $this->trans_amt, PDO::PARAM_INT);
         $stmt->bindValue(":user_id", $this->user_id, PDO::PARAM_INT);
-        $stmt->bindValue(":trans_status", (int)$this->trans_status, PDO::PARAM_BOOL);
+        $stmt->bindValue(":trans_status", (int)$this->trans_status, PDO::PARAM_STR);
     
         if($stmt->execute()){
             $data = array();
