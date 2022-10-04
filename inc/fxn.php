@@ -102,24 +102,28 @@ function transSwitch($url, $_db){
     $controller =  new TransactionController($trans);
 
     switch ($url[3]) {
-        case 'charge':
-            $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
+        case 'fund':
+            $controller->processRequest($_SERVER["REQUEST_METHOD"], $id, $url[3]);
+            break;
+        
+        case 'withdraw':
+            $controller->processRequest($_SERVER["REQUEST_METHOD"], $id, $url[3]);
             break;
 
         case "get_trans":
-            $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
+            $controller->processRequest($_SERVER["REQUEST_METHOD"], $id, $url[3]);
             break;
 
         case "get":
-            $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
+            $controller->processRequest($_SERVER["REQUEST_METHOD"], $id, $url[3]);
             break;
 
         case "update":
-            $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
+            $controller->processRequest($_SERVER["REQUEST_METHOD"], $id, $url[3]);
             break;
 
         case "delete":
-            $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
+            $controller->processRequest($_SERVER["REQUEST_METHOD"], $id, $url[3]);
             break;
         default:
             http_response_code(404);

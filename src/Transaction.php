@@ -90,7 +90,6 @@ class Transaction
         $this->trans_type=htmlspecialchars(strip_tags($data->trans_type));
         $this->trans_amt=htmlspecialchars(strip_tags($data->trans_amt));
         $this->user_id=htmlspecialchars(strip_tags($data->id));
-        $this->trans_status=htmlspecialchars(strip_tags($data->trans_status));
         // $this->trans_date=htmlspecialchars((strip_tags($data->)))
 
     
@@ -98,7 +97,7 @@ class Transaction
         $stmt->bindValue(":trans_type", $this->trans_type, PDO::PARAM_STR);
         $stmt->bindValue(":trans_amt", $this->trans_amt, PDO::PARAM_INT);
         $stmt->bindValue(":user_id", $this->user_id, PDO::PARAM_INT);
-        $stmt->bindValue(":trans_status", (int)$this->trans_status, PDO::PARAM_STR);
+        $stmt->bindValue(":trans_status", $this->trans_status, PDO::PARAM_STR);
     
         if($stmt->execute()){
             $data = array();
@@ -113,6 +112,40 @@ class Transaction
                     "status"=>false,
                     'message'=>'Something went wrong... please try again',
                     );
+    }
+
+    public function charge($data){
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, "https://api.commerce.coinbase.com/charges/");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $post = array(
+            "name" => $data->trans_type,
+            "description" => '',
+            "local_price" => array(
+                'amount' => $data->amt,
+                'currency' => 'USD'
+            ),
+            "pricing_type" => "fixed_price",
+            "metadata" => array(
+                'customer_id' => $data->user_id,
+            )
+        );
+
+        $post = json_encode($post);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+        curl_setopt($ch, CURLOPT_POST, 1);
+
+        $headers = array();
+        $headers[] = "Content-Type: application/json";
+        $headers[] = "X-Cc-Api-Key: ebe7dbe0-664b-4445-9d45-4847098b5a4d";
+        $headers[] = "X-Cc-Version: 2018-03-22";
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+        $result = curl_exec($ch);
+        curl_close ($ch);
+        $response = json_decode($result);
+        echo $response->data->hosted_url;
     }
 
     public function delete(string $id): int
