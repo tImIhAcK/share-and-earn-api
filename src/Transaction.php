@@ -30,13 +30,24 @@ class Transaction
         $data = array();
         $data['transaction'] = array();
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
-            // extract($row);
-            $data['transaction'] = $row;
+            extract($row);
+            $transArr = [
+                'user_id'=>$user_id,
+                'trans_type'=>$trans_type,
+                'trans_amt'=>$tran_samt,
+                'trans_status'=>$trans_status,
+                'trans_date'=>$trans_date
+            ];
+            array_push($data['transactions'], $transArr);
+        }
+
+        if(empty($data)){
+            return array("status"=>0, 'message'=>'No transactions');
         }
         return $data;
     }
 
-    public function get(string $id): array | false
+    public function get(string $id): array
     {
         $query = "SELECT * FROM ".$this->db_table." WHERE user_id=:id";
         $stmt = $this->conn->prepare($query);
@@ -47,8 +58,18 @@ class Transaction
         $data['transaction'] = array();
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
             extract($row);
-            $data['transaction'] = $row;
+            $transArr = [
+                'user_id'=>$user_id,
+                'trans_type'=>$trans_type,
+                'trans_amt'=>$tran_samt,
+                'trans_status'=>$trans_status,
+                'trans_date'=>$trans_date
+            ];
+            array_push($data['transactions'], $transArr);
+        }
 
+        if(empty($data)){
+            return array("status"=>0, 'message'=>'No transactions');
         }
         return $data;
     }

@@ -94,37 +94,7 @@ function orderSwitch($url, $_db){
     endswitch;
 }
 
-// // Bank Controller Function
-// function bankSwitch($url, $_db){
-
-//     $id = $url[4] ?? null;
-//     $bank = new Bank($_db);
-//     $controller =  new BankController($bank);
-
-//     switch ($url[3]) {
-//         case 'create':
-//             $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
-//             break;
-
-//         case "get_banks":
-//             $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
-//             break;
-
-//         case "get":
-//             $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
-//             break;
-
-//         case "delete":
-//             $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
-//             break;
-//         default:
-//             http_response_code(404);
-//             echo json_encode(array("message" => 'File not found'));
-//             break;
-//     }
-// }
-
-// Bank Controller Function
+// Transaction Controller Function
 function transSwitch($url, $_db){
 
     $id = $url[4] ?? null;
@@ -132,11 +102,11 @@ function transSwitch($url, $_db){
     $controller =  new TransactionController($trans);
 
     switch ($url[3]) {
-        case 'create':
+        case 'charge':
             $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
             break;
 
-        case "get_banks":
+        case "get_trans":
             $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
             break;
 

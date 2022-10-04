@@ -207,14 +207,16 @@ class User
                 "user_id" => $user_id,
                 "phone_number" => $phone_number,
                 "user_email"=>$user_email,
-                "refer_code"=>$ref_code
+                "refer_code"=>$ref_code,
+                "refer_count"=>$refer_count,
+                "balance"=>$balance
             );
             array_push($data["user"], $userArr);
         }
         return $data;
     }
 
-    public function get(string $id): array | false
+    public function get(string $id): array
     {
         $query = "SELECT * FROM ".$this->db_table." WHERE user_id=:id";
         $stmt = $this->conn->prepare($query);
@@ -230,8 +232,14 @@ class User
                 "phone_number" => $phone_number,
                 "user_email"=>$user_email,
                 "ref_code"=>$ref_code,
+                "refer_count"=>$refer_count,
+                "balance"=>$balance
             );
             array_push($data["user"], $userArr);
+        }
+
+        if(empty($data)){
+            return array("status"=>0, 'message'=>'No user with the id '.$id);
         }
         return $data;
     }
