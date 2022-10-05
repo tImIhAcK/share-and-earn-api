@@ -26,7 +26,7 @@ class User
     {
         $query =    "SELECT 
                         w.address as wallet_address, w.balance  as balance, user_id,
-                        full_name, user_email, user_password 
+                        full_name, user_email, user_password, verified
                     FROM 
                         users
                     LEFT JOIN
@@ -54,14 +54,20 @@ class User
 
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
                 extract($row);
-                $userArr = [
-                    'user_id'=> $user_id,
-                    'full_name'=>$full_name,
-                    'email'=>$user_email,
-                    'wallet_address'=>$wallet_address,
-                    'balance'=>$balance
-                ];
-                array_push($data['user'], $userArr);
+
+                if($verified == 1){
+                    $userArr = [
+                        'user_id'=> $user_id,
+                        'full_name'=>$full_name,
+                        'email'=>$user_email,
+                        'verified'=>$verified,
+                        'wallet_address'=>$wallet_address,
+                        'balance'=>$balance
+                    ];
+                    array_push($data['user'], $userArr);
+                }else{
+                    return array('status'=>0, 'message'=>'Account is not verified. check your mail');
+                }
             }
             return $data;
 
@@ -169,7 +175,7 @@ class User
 
             mail($to, $subject, $message, $headers);
 
-            return array("success"=>["status"=> 1, "message"=>"Registration successful. Check your mail for the verification link"]);
+            return array("status"=> 1, "message"=>"Registration successful. Check your mail for the verification link");
         }
         return array("error"=>["status"=> 0, "message"=>"Error registering user"]);
                     

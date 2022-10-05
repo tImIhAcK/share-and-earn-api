@@ -42,6 +42,7 @@ if (!empty($selector) || !empty($token)){
 
                 $stmt->bindValue(":pwdResetSelector", $pwdRestSelector);
                 $stmt->bindValue(":pwdResetExpires", $currentTime);
+                $stmt->execute();
 
                 if ($stmt->rowCount() == 1 ) {
                     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
