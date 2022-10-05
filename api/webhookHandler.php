@@ -81,5 +81,5 @@ function update($_db): array
     return array(
                 "status"=>false,
                 'message'=>'Something went wrong... please try again',
-                );
+            );
 }

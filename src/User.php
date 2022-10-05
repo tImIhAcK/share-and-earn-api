@@ -1,7 +1,7 @@
 <?php
 
-include "../vendor/autoload.php";
-use Firebase\JWT\JWT;
+// include "../vendor/autoload.php";
+// use Firebase\JWT\JWT;
 
 class User 
 {
@@ -10,7 +10,7 @@ class User
     private $db_table = "users";
     // Columns
     public $id;
-    public $phone_number;
+    public $full_name;
     public $password;
     public $user_email;
     public $refer;
@@ -23,23 +23,23 @@ class User
     public function login($data):array
     {
         $query =    "SELECT 
-                        w.address as wallet_address, w.balance  as balance, user_id, phone_number, 
-                        user_email, user_password 
+                        w.address as wallet_address, w.balance  as balance, user_id,
+                        full_name, user_email, user_password 
                     FROM 
                         users
                     LEFT JOIN
                         wallet w
                     ON
-                        user.id = w.user_id
+                        user.user_id = w.user_id
                     WHERE 
-                        phone_number=:phone_number";
+                        user_email=:user_email";
 
         $stmt = $this->conn->prepare($query);
 
-        $this->phone_number=htmlspecialchars(strip_tags($data->phone_number));
+        $this->user_email=htmlspecialchars(strip_tags($data->email));
         $this->password=htmlspecialchars(strip_tags($data->password));
         // bind data
-        $stmt->bindValue(":phone_number", $this->phone_number);
+        $stmt->bindValue(":user_email", $this->user_email);
 
         if(!$this->verifyPassword()){
             return array("error"=>["status"=>0, "message"=>"Invalid password"]);
@@ -47,13 +47,14 @@ class User
         
         if($stmt->execute()){
             $data = array();
+            $data['status'] = '1';
             $data['user'] = array();
 
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
                 extract($row);
                 $userArr = [
                     'user_id'=> $user_id,
-                    'phone_number'=>$phone_number,
+                    'full_name'=>$full_name,
                     'email'=>$user_email,
                     'wallet_address'=>$wallet_address,
                     'balance'=>$balance
@@ -84,10 +85,10 @@ class User
     }
 
     public function verifyPassword(){
-        $query = "SELECT user_password FROM users WHERE phone_number=:phone_number";
+        $query = "SELECT user_password FROM users WHERE user_email=:user_email";
         $stmt = $this->conn->prepare($query);
 
-        $stmt->bindValue(":phone_number", $this->phone_number);
+        $stmt->bindValue(":user_email", $this->user_email);
         $stmt->execute();
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
@@ -103,7 +104,7 @@ class User
         $query =    "INSERT INTO 
                         ".$this->db_table."
                     SET
-                        phone_number=:phone_number,
+                        full_name=:full_name,
                         user_password=:user_password,
                         user_email=:user_email,
                         refer=:refer,
@@ -113,7 +114,7 @@ class User
 
 
         // sanitize
-        $this->phone_number=htmlspecialchars(strip_tags($data->phone_number));
+        $this->full_name=htmlspecialchars(strip_tags($data->full_name));
         $this->password=htmlspecialchars(strip_tags($data->password));
         $this->user_email=htmlspecialchars(strip_tags($data->email));
 
@@ -127,14 +128,14 @@ class User
         }
 
         // bind data
-        $stmt->bindValue(":phone_number", $this->phone_number);
+        $stmt->bindValue(":full_name", $this->full_name);
         $stmt->bindValue(":user_email", $this->user_email);
         $stmt->bindValue(":user_password", password_hash($this->password, PASSWORD_BCRYPT));
         $stmt->bindValue(":ref_code", $this->generateReferCode());
 
-        if ($this->phoneExist()) {
-            return array("status"=>0,"message"=> "Phone number already exist");
-        }
+        // // if ($this->phoneExist()) {
+        //     return array("status"=>0,"message"=> "Phone number already exist");
+        // }
 
         if ($this->emailExist()) {
             return array("status"=>0,"message"=> "Email already exist");
@@ -150,19 +151,19 @@ class User
     }
 
 
-    public function phoneExist(): bool
-    {
-        $query = "SELECT * FROM users WHERE phone_number=:phone_number";
-        $stmt = $this->conn->prepare($query);
+    // public function phoneExist(): bool
+    // {
+    //     $query = "SELECT * FROM users WHERE phone_number=:phone_number";
+    //     $stmt = $this->conn->prepare($query);
 
-        $stmt->bindParam(":phone_number", $this->phone_number);
-        $stmt->execute();
+    //     $stmt->bindParam(":phone_number", $this->phone_number);
+    //     $stmt->execute();
 
-        if ($stmt->rowCount() == 1 ) {
-            return true;
-        }
-        return false;
-    }
+    //     if ($stmt->rowCount() == 1 ) {
+    //         return true;
+    //     }
+    //     return false;
+    // }
 
     public function emailExist(): bool
     {
@@ -179,7 +180,7 @@ class User
     }
 
     public function verifyRefer($data){
-        $query = "SELECT user_id FROM users WHERE ref_code=:refer_code";
+        $query = "SELECT user_id, full_name FROM users WHERE ref_code=:refer_code";
         $stmt = $this->conn->prepare($query);
 
         $stmt->bindParam(":refer_code", $data->refer_code);
@@ -232,7 +233,7 @@ class User
             extract($row);
             $userArr = array(
                 "user_id" => $user_id,
-                "phone_number" => $phone_number,
+                "full_name" => $full_name,
                 "user_email"=>$user_email,
                 "refer_code"=>$ref_code,
                 "refer_count"=>$refer_count,
@@ -256,7 +257,7 @@ class User
             extract($row);
             $userArr = array(
                 "user_id" => $user_id,
-                "phone_number" => $phone_number,
+                "full_name" => $full_name,
                 "user_email"=>$user_email,
                 "ref_code"=>$ref_code,
             );
