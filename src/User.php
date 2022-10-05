@@ -171,10 +171,6 @@ class User
                     
     }
 
-    // git clone https://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@github.com/tImIhAcK/alx-zero_day.git
-    // git config --global user.email "adeniranjohn2016@gmail.com"
-    // git config --global user.name "Adeniran John"
-
     // public function phoneExist(): bool
     // {
     //     $query = "SELECT * FROM users WHERE phone_number=:phone_number";
