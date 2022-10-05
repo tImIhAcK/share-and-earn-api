@@ -62,7 +62,7 @@ class Order
         $stmt->bindValue(":order_no", $this->order_no, PDO::PARAM_STR);
         $stmt->bindValue(":order_prod", $this->order_prod, PDO::PARAM_STR);
         $stmt->bindValue(":order_quantity", $this->order_quantity, PDO::PARAM_INT);
-        $stmt->bindValue(":order_price", ($this->order_price * $this->order_quantity), PDO::PARAM_INT);
+        $stmt->bindValue(":order_price", $this->order_price, PDO::PARAM_INT);
         $stmt->bindValue(":user_id", (int)$this->user_id, PDO::PARAM_INT);
     
         if($stmt->execute()){
