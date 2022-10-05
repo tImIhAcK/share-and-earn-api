@@ -14,6 +14,7 @@ class User
     public $password;
     public $user_email;
     public $refer;
+    public $vtoken;
 
     // Db connection
     public function __construct($db){
@@ -107,6 +108,7 @@ class User
                         full_name=:full_name,
                         user_password=:user_password,
                         user_email=:user_email,
+                        vtoken=:vtoken,
                         refer=:refer,
                         ref_code=:ref_code";
     
@@ -117,6 +119,7 @@ class User
         $this->full_name=htmlspecialchars(strip_tags($data->full_name));
         $this->password=htmlspecialchars(strip_tags($data->password));
         $this->user_email=htmlspecialchars(strip_tags($data->email));
+        $this->vtoken=random_bytes(32);
 
         // Verify the refer code
         $ref_id = $this->verifyRefer($data); 
@@ -131,6 +134,7 @@ class User
         $stmt->bindValue(":full_name", $this->full_name);
         $stmt->bindValue(":user_email", $this->user_email);
         $stmt->bindValue(":user_password", password_hash($this->password, PASSWORD_BCRYPT));
+        $stmt->bindValue("vtoken", password_hash($this->vtoken, PASSWORD_BCRYPT));
         $stmt->bindValue(":ref_code", $this->generateReferCode());
 
         // // if ($this->phoneExist()) {
@@ -144,12 +148,32 @@ class User
         if($stmt->execute()){
             $this->id = $this->conn->lastInsertId();
             $this->createWallet();
-            return array("success"=>["status"=> 1, "message"=>"Registration successful"]);
+
+            $url='';
+            $to = $this->user_email;
+            $subject = 'Verify Email';
+            $message = "<p>
+                            Click the link below to verify your account
+                        </p>";
+
+            $message .= "<p>Here is the link: <br>";
+            $message .= '<a href="' .$url. '">' .$url. '</a></p>';
+
+            $headers = "From: Share and Earn <adeniranjohn2016@gmail.com>\r\n";
+            $headers .= "Reply-To: ";
+            $headers .= "Content-type: text/html\r\n";
+
+            mail($to, $subject, $message, $headers);
+
+            return array("success"=>["status"=> 1, "message"=>"Registration successful. Check your mail for the verification link"]);
         }
         return array("error"=>["status"=> 0, "message"=>"Error registering user"]);
                     
     }
 
+    // git clone https://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@github.com/tImIhAcK/alx-zero_day.git
+    // git config --global user.email "adeniranjohn2016@gmail.com"
+    // git config --global user.name "Adeniran John"
 
     // public function phoneExist(): bool
     // {
