@@ -57,7 +57,7 @@ class TransactionController
                 if($url=='fund'){
                     $data = json_decode(file_get_contents("php://input", true));
                     http_response_code(201);
-                    echo json_encode($this->trans->create($data));
+                    echo json_encode($this->trans->fund($data));
                 }
                 break;
             // case "PUT":
