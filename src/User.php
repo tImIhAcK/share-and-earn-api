@@ -111,7 +111,7 @@ class User
     public function getReferPeople($user_id): array{
         $query =    "SELECT full_name FROM users WHERE refer=:id";
         $stmt = $this->conn->prepare($query);
-        $stmt->bindValue(":id", $this->user_id);
+        $stmt->bindValue(":id", $user_id);
         $stmt->execute();
         
         if($stmt->rowCount()>0){
@@ -174,7 +174,7 @@ class User
             $this->id = $this->conn->lastInsertId();
             $this->createWallet();
 
-            $url = "http://localhost:8801/verifyEmail.php?vselector=" .$this->vselector. "&vtoken=".bin2hex($this->vtoken);
+            $url = "https://earn-and-share.000webhostapp.com/api/verifyEmail.php?vselector=" .$this->vselector. "&vtoken=".bin2hex($this->vtoken);
             $to = $this->user_email;
             $subject = 'Verify Email';
             $message = "<p>

@@ -20,7 +20,6 @@ $database = new Database();
 $_db = $database->connect();
 
 $user_id = $_POST['user_id'];
-$trans_type = $_POST['trans_type'];
 $amt = $_POST['amount'];
 
 $ch = curl_init();
