@@ -61,6 +61,7 @@ class User
                         'full_name'=>$full_name,
                         'email'=>$user_email,
                         'verified'=>$verified,
+                        'people_refered'=>$this->getReferPeople($user_id),
                         'wallet_address'=>$wallet_address,
                         'balance'=>$balance
                     ];
@@ -105,6 +106,20 @@ class User
             }
         }
         return false;
+    }
+
+    public function getReferPeople($user_id): array{
+        $query =    "SELECT full_name FROM users WHERE refer=:id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindValue(":id", $this->user_id);
+        $stmt->execute();
+        
+        if($stmt->rowCount()>0){
+            while($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+                return $row;
+            }
+        }
+        return array();
     }
 
     public function register($data): array
