@@ -87,7 +87,7 @@ class Order
                     );
     }
 
-    public function get(string $id): array | false
+    public function get(string $id): array 
     {
         $query = "SELECT * FROM ".$this->db_table." WHERE user_id=:id";
         $stmt = $this->conn->prepare($query);
