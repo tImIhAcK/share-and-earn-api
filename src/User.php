@@ -15,6 +15,7 @@ class User
     public $user_email;
     public $refer;
     public $vtoken;
+    public $vselector;
 
     // Db connection
     public function __construct($db){
@@ -114,12 +115,14 @@ class User
     
         $stmt = $this->conn->prepare($query);
 
+        $this->vselector = bin2hex(random_bytes(8));
+        $this->vtoken = random_bytes(32);
+
 
         // sanitize
         $this->full_name=htmlspecialchars(strip_tags($data->full_name));
         $this->password=htmlspecialchars(strip_tags($data->password));
         $this->user_email=htmlspecialchars(strip_tags($data->email));
-        $this->vtoken=random_bytes(32);
 
         // Verify the refer code
         $ref_id = $this->verifyRefer($data); 
@@ -134,6 +137,7 @@ class User
         $stmt->bindValue(":full_name", $this->full_name);
         $stmt->bindValue(":user_email", $this->user_email);
         $stmt->bindValue(":user_password", password_hash($this->password, PASSWORD_BCRYPT));
+        $stmt->bindValue(':vselector', $this->vselector);
         $stmt->bindValue("vtoken", password_hash($this->vtoken, PASSWORD_BCRYPT));
         $stmt->bindValue(":ref_code", $this->generateReferCode());
 
@@ -149,7 +153,7 @@ class User
             $this->id = $this->conn->lastInsertId();
             $this->createWallet();
 
-            $url='';
+            $url = "http://localhost:8801/verifyEmail.php?vselector=" .$this->vselector. "&vtoken=".bin2hex($this->vtoken);
             $to = $this->user_email;
             $subject = 'Verify Email';
             $message = "<p>
