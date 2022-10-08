@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-header("Access-Control-Allow-Origin *");
+header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");
 header("Authorization: Basic ");
@@ -19,33 +19,9 @@ include "../vendor/autoload.php";
 include "../inc/fxn.php";
 
 $database = new Database();
-$_db = $database->connect();
+$db = $database->connect();
 
-
-$url = explode("/", $_SERVER["REQUEST_URI"]);
-
-switch($url[2]):
-    case "user":
-        userSwitch($url, $_db);
-        break;
-    case "order":
-        orderSwitch($url, $_db);
-        break;
-    case "product":
-        productSwitch($url, $_db);
-        break;
-    case "admin":
-        adminSwitch($url, $_db);
-        break;
-    case "transaction":
-        transSwitch($url, $_db);
-        break;
-    default:
-        http_response_code(404);
-        echo json_encode(array("message"=>"File not fouond"));
-        break;
-endswitch;
-
+Router::route($db);
 
 
 

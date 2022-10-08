@@ -8,9 +8,9 @@ class Database
 {
 
 	private $db_host = "localhost";
-	private $db_name = "id19615868_share_and_earn";
-	private $db_username = "id19615868_root";
-	private $db_password = "m~adeNIR21:m~adeNIR21:";
+	private $db_name = "share_and_earn";
+	private $db_username = "root";
+	private $db_password = "";
 	public $conn;
 
 	const ATTR_EMULATE_PREPARES = false;
@@ -30,3 +30,7 @@ class Database
 
 
 }
+
+	// private $db_name = "id19615868_share_and_earn";
+	// private $db_username = "id19615868_root";
+	// private $db_password = "m~adeNIR21:m~adeNIR21:";

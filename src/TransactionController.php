@@ -19,31 +19,31 @@ class TransactionController
 
     public function processResourcesRequest(string $method, string $id): void
     {
-        $result = $this->bank->trans($id);
-        if(! $result){
-            http_response_code(404);
-            echo json_encode(array("message"=>"user not found"));
-            return;
-        }
+        // $result = $this->bank->trans($id);
+        // if(! $result){
+        //     http_response_code(404);
+        //     echo json_encode(array("message"=>"user not found"));
+        //     return;
+        // }
 
-        switch($method):
-            case "GET":
-                echo json_encode($result);
-                break;
-            case "DELETE":
-                $row = $this->trans->delete($id);
-                echo json_encode([
-                    "deleted"=>[
-                        "message"=>"Transaction deleted",
-                        "row"=>$row
-                    ]
-                ]);
-                break;
-            default:
-                http_response_code(405);
-                header("Allow: GET, DELETE");
-                break;
-        endswitch;
+        // switch($method):
+        //     case "GET":
+        //         echo json_encode($result);
+        //         break;
+        //     case "DELETE":
+        //         $row = $this->trans->delete($id);
+        //         echo json_encode([
+        //             "deleted"=>[
+        //                 "message"=>"Transaction deleted",
+        //                 "row"=>$row
+        //             ]
+        //         ]);
+        //         break;
+        //     default:
+        //         http_response_code(405);
+        //         header("Allow: GET, DELETE");
+        //         break;
+        // endswitch;
     }
 
     public function processCollectionRequest(string $method, $url)

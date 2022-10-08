@@ -130,9 +130,10 @@ class User
                         full_name=:full_name,
                         user_password=:user_password,
                         user_email=:user_email,
+                        vselector=:vselector
                         vtoken=:vtoken,
-                        refer=:refer,
-                        ref_code=:ref_code";
+                        is_referred=:is_referred,
+                        referral_code=:ref_code";
     
         $stmt = $this->conn->prepare($query);
 
@@ -146,12 +147,11 @@ class User
         $this->user_email=htmlspecialchars(strip_tags($data->email));
 
         // Verify the refer code
-        $ref_id = $this->verifyRefer($data); 
-        if ($ref_id){
-            $this->refer = $ref_id;
-            $stmt->bindValue(":refer", $this->refer);
-        }else{
-            $stmt->bindValue(":refer", "");
+        $ref_result = $this->verifyRefer($data);
+        echo $ref_result;
+        exit;
+        if ($ref_result){
+            $stmt->bindValue(":is_referred", (int)1, PDO::PARAM_INT);
         }
 
         // bind data
@@ -174,6 +174,7 @@ class User
             $this->id = $this->conn->lastInsertId();
             $this->createWallet();
 
+
             $url = "https://earn-and-share.000webhostapp.com/api/verifyEmail.php?vselector=" .$this->vselector. "&vtoken=".bin2hex($this->vtoken);
             $to = $this->user_email;
             $subject = 'Verify Email';
@@ -188,27 +189,13 @@ class User
             $headers .= "Reply-To: ";
             $headers .= "Content-type: text/html\r\n";
 
-            mail($to, $subject, $message, $headers);
+            // mail($to, $subject, $message, $headers);
 
             return array("status"=> 1, "message"=>"Registration successful. Check your mail for the verification link");
         }
         return array("error"=>["status"=> 0, "message"=>"Error registering user"]);
                     
     }
-
-    // public function phoneExist(): bool
-    // {
-    //     $query = "SELECT * FROM users WHERE phone_number=:phone_number";
-    //     $stmt = $this->conn->prepare($query);
-
-    //     $stmt->bindParam(":phone_number", $this->phone_number);
-    //     $stmt->execute();
-
-    //     if ($stmt->rowCount() == 1 ) {
-    //         return true;
-    //     }
-    //     return false;
-    // }
 
     public function emailExist(): bool
     {
@@ -224,18 +211,25 @@ class User
         return false;
     }
 
-    public function verifyRefer($data){
-        $query = "SELECT user_id, full_name FROM users WHERE ref_code=:refer_code";
+    public function verifyRefer($data)
+    {
+        $query = "SELECT user_id, full_name FROM users WHERE referral_code=:referral_code LIMIT 1";
         $stmt = $this->conn->prepare($query);
 
-        $stmt->bindParam(":refer_code", $data->refer_code);
+        $stmt->bindParam(":referral_code", $data->referral_code);
         $stmt->execute();
 
         if ($stmt->rowCount() == 1 ) {
+            $result = array();
+            $result['body'] = array();
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
                 extract($row);
-                return $user_id;
+                $referArr = array(
+                    'referral_id'=>$user_id,
+                    'referral_name'=>$full_name
+                );
             }
+            array_push($result['body'], $referArr);
         }
         return false;
     }

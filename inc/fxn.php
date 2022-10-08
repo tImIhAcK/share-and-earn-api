@@ -29,13 +29,13 @@ function adminSwitch($url, $_db){
 }
 
 // User Controller  Function
-function userSwitch($url, $_db){
+function user_func($url, $db){
 
-    $id = $url[4] ?? null;
-    $user = new User($_db);
+    $id = $url[5] ?? null;
+    $user = new User($db);
     $controller =  new UserController($user, $url[3]);
 
-    switch ($url[3]):
+    switch ($url[4]):
         case "get_users":
             $controller->processRequest($_SERVER["REQUEST_METHOD"], $id, $url[3]);
             break;
@@ -45,11 +45,11 @@ function userSwitch($url, $_db){
             break;
 
         case "login":
-            $controller->processRequest($_SERVER["REQUEST_METHOD"], $id, $url[3]);
+            $controller->processRequest($_SERVER["REQUEST_METHOD"], $id, $url[4]);
             break;
 
         case "register":
-            $controller->processRequest($_SERVER["REQUEST_METHOD"], $id, $url[3]);
+            $controller->processRequest($_SERVER["REQUEST_METHOD"], $id, $url[4]);
             break;
 
         case "delete":

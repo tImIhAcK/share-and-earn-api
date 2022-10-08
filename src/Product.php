@@ -110,7 +110,7 @@ class Product
             return $data;
         }
         return array(
-                    "status"=>false,
+                    "status"=>0,
                     'message'=>'Something went wrong... please try again',
                     );
     }
